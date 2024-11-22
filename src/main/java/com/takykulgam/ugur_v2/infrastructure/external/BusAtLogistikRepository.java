@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.infrastructure.external;
 
-import com.takykulgam.ugur_v2.applications.data_access.bus.BusRepository;
+import com.takykulgam.ugur_v2.applications.gateways.BusRepository;
 import com.takykulgam.ugur_v2.infrastructure.external.dto.BusAtLogistikaDto;
 import com.takykulgam.ugur_v2.utils.rest.ApiRequestFactory;
 import com.takykulgam.ugur_v2.utils.rest.auth.AuthContract;

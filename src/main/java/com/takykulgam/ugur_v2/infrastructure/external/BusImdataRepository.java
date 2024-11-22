@@ -1,11 +1,10 @@
 package com.takykulgam.ugur_v2.infrastructure.external;
 
-import com.takykulgam.ugur_v2.applications.data_access.bus.BusRepository;
+import com.takykulgam.ugur_v2.applications.gateways.BusRepository;
 import com.takykulgam.ugur_v2.utils.rest.ApiRequestFactory;
 import com.takykulgam.ugur_v2.utils.rest.auth.AuthContract;
 import com.takykulgam.ugur_v2.utils.rest.auth.BasicAuth;
 import com.takykulgam.ugur_v2.utils.rest.request.ApiRequest;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.Instant;
 

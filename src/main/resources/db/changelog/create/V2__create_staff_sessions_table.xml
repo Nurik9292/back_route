@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+        <changeSet id="2" author="nury">
+            <preConditions>
+                <not>
+                    <tableExists tableName="staff_sessions" />
+                </not>
+            </preConditions>
+            <createTable tableName="staff_sessions">
+                <column name="id" type="bigint" autoIncrement="true">
+                    <constraints nullable="false" unique="true"/>
+                </column>
+                <column name="staff_id" type="bigint">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="token" type="varchar(200)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+
+            <addForeignKeyConstraint
+                    baseTableName="staff_sessions"
+                    baseColumnNames="staff_id"
+                    referencedTableName="staff"
+                    referencedColumnNames="id"
+                    constraintName="staff_session_staff_fk"
+                    onDelete="CASCADE"/>
+        </changeSet>
+
+
+
+</databaseChangeLog>
