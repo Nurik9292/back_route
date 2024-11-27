@@ -5,13 +5,11 @@ public class OutputStaff {
     private long id;
     private String name;
     private boolean role;
-    private String password;
 
-    public OutputStaff(long id, String name, String password, boolean role) {
+    public OutputStaff(long id, String name, boolean role) {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.password = password;
     }
 
     public long getId() {
@@ -38,13 +36,6 @@ public class OutputStaff {
         return role;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public String toString() {

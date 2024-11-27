@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2;
 
 import com.takykulgam.ugur_v2.applications.iteractor.*;
-import com.takykulgam.ugur_v2.core.boundaries.input.staff.StaffDelete;
+import com.takykulgam.ugur_v2.core.boundaries.input.staff.StaffDeleteCase;
 import com.takykulgam.ugur_v2.core.boundaries.input.staff.StaffUpdateCase;
 import com.takykulgam.ugur_v2.interfaces.gateway.StaffRepositoryImpl;
 import com.takykulgam.ugur_v2.interfaces.presenters.StaffAllPresenter;
@@ -28,12 +28,10 @@ import com.takykulgam.ugur_v2.infrastructure.security.admin.CustomAuthentication
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 @SpringBootApplication
@@ -64,22 +62,22 @@ public class UgurV2Application {
     }
 
     @Bean
-    public Presenter<OutputStaff, Response<StaffViewModel>> staffPresenter() {
+    public Presenter<OutputStaff, Mono<Response<StaffViewModel>>> staffPresenter() {
         return new StaffPresenter();
     }
 
     @Bean
-    public Presenter<List<OutputStaff>, Response<ListStaffViewModel>> staffAllPresenter() {
+    public Presenter<Flux<OutputStaff>, Mono<Response<ListStaffViewModel>>> staffAllPresenter() {
         return new StaffAllPresenter();
     }
 
     @Bean
-    public Presenter<String, Response<StaffAuthViewModel>> authLoginPresenter() {
+    public Presenter<String, Mono<Response<StaffAuthViewModel>>> authLoginPresenter() {
         return new StaffAuthPresenter();
     }
 
     @Bean
-    public Presenter<String, Response<String>> staffDeletePresenter() {
+    public Presenter<String, Mono<Response<String>>> staffDeletePresenter() {
         return new StaffDeletePresenter();
     }
 
@@ -99,8 +97,8 @@ public class UgurV2Application {
     }
 
     @Bean
-    public StaffDelete staffDelete(StaffRepositoryImpl staffRepositoryImpl) {
-        return new StaffDeleteImpl(staffRepositoryImpl, staffDeletePresenter());
+    public StaffDeleteCase staffDelete(StaffRepositoryImpl staffRepositoryImpl) {
+        return new StaffDeleteCaseImpl(staffRepositoryImpl, staffDeletePresenter());
     }
 
     @Bean
@@ -114,8 +112,5 @@ public class UgurV2Application {
                 authLoginPresenter());
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+
 }

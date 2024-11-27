@@ -1,32 +1,32 @@
 package com.takykulgam.ugur_v2.interfaces.presenters;
 
-import com.takykulgam.ugur_v2.interfaces.viewmodels.Response;
-import com.takykulgam.ugur_v2.interfaces.viewmodels.Staff;
-import com.takykulgam.ugur_v2.interfaces.viewmodels.ListStaffViewModel;
 import com.takykulgam.ugur_v2.core.boundaries.dto.OutputStaff;
 import com.takykulgam.ugur_v2.core.boundaries.output.Presenter;
+import com.takykulgam.ugur_v2.interfaces.viewmodels.ListStaffViewModel;
+import com.takykulgam.ugur_v2.interfaces.viewmodels.Response;
+import com.takykulgam.ugur_v2.interfaces.viewmodels.Staff;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.stream.Collectors;
+public class StaffAllPresenter implements Presenter<Flux<OutputStaff>,Mono<Response<ListStaffViewModel>>> {
 
-public class StaffAllPresenter implements Presenter<List<OutputStaff>, Response<ListStaffViewModel>> {
-
-    private Response<ListStaffViewModel>  response;
+    private Mono<Response<ListStaffViewModel>> response;
 
     @Override
-    public Response<ListStaffViewModel> getResponse() {
+    public Mono<Response<ListStaffViewModel>> getResponse() {
         return response;
     }
 
     @Override
-    public void present(boolean success, List<OutputStaff> list) {
-        List<Staff> staffList = list.stream()
-                .map(outputStaff -> new Staff(
-                        outputStaff.getId(),
-                        outputStaff.getName(),
-                        outputStaff.isRole()
-                ))
-                .collect(Collectors.toList());
-        response = new Response<>(success, new ListStaffViewModel(staffList));
+    public Mono<Void> present(boolean success, Flux<OutputStaff> list) {
+        Flux<Staff> staffFlux = list.map(outputStaff ->
+                new Staff(outputStaff.getId(), outputStaff.getName(), outputStaff.isRole())
+        );
+
+        ListStaffViewModel listStaffViewModel = new ListStaffViewModel(staffFlux);
+
+        response = Mono.just(new Response<>(success, listStaffViewModel));
+
+        return Mono.empty();
     }
 }

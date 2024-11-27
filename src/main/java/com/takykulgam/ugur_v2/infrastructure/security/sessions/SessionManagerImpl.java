@@ -6,8 +6,7 @@ import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffSessionEn
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Component
 public class SessionManagerImpl implements SessionManager {
@@ -20,17 +19,19 @@ public class SessionManagerImpl implements SessionManager {
     }
 
     @Override
-    public StaffSessionEntity refreshSession(SessionUser sessionUser) {
-        return  actionStaff((StaffEntity) sessionUser);
+    public Mono<StaffSessionEntity> refreshSession(SessionUser sessionUser) {
+        return Mono.just(sessionUser)
+                .cast(StaffEntity.class)
+                .flatMap(this::actionStaff);
     }
 
-
-    private StaffSessionEntity actionStaff(StaffEntity staff) {
-        StaffSessionEntity session = staff.getSession();
-        Optional.ofNullable(session).ifPresent(jpaStaffSessionRepository::delete);
-        StaffSessionEntity newSession = new StaffSessionEntity();
-        newSession.setStaff(staff);
-
-        return newSession;
+    private Mono<StaffSessionEntity> actionStaff(StaffEntity staff) {
+        return Mono.justOrEmpty(staff)
+                .flatMap(staffEntity ->  jpaStaffSessionRepository.deleteByStaffId(staffEntity.getId()))
+                .then(Mono.defer(() -> {
+                    StaffSessionEntity newSession = new StaffSessionEntity();
+                    newSession.setStaffId(staff.getId());
+                    return Mono.just(newSession);
+                }));
     }
 }

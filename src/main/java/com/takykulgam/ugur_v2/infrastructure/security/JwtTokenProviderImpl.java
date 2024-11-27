@@ -1,30 +1,47 @@
 package com.takykulgam.ugur_v2.infrastructure.security;
 
-import com.takykulgam.ugur_v2.applications.security.JwtToken;
+import com.takykulgam.ugur_v2.applications.security.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtTokenProvider implements JwtToken {
+public class JwtTokenProviderImpl implements JwtTokenProvider {
 
     @Value("${security.jwt.secret}")
     private String secretKey;
 
     @Value("${security.jwt.expiration}")
     private long jwtExpiration;
+
+    private SecretKey key;
+
+    @Override
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    @Override
+    public boolean isTokenValid(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     public String extractUsername(String token) {
@@ -50,12 +67,6 @@ public class JwtTokenProvider implements JwtToken {
     @Override
     public long getExpirationTime() {
         return jwtExpiration;
-    }
-
-    @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -87,17 +98,14 @@ public class JwtTokenProvider implements JwtToken {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .verifyWith((SecretKey)getSignInKey())
+                .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
 
-
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private SecretKey getSignInKey() {
+        return Keys.hmacShaKeyFor(Base64.getEncoder().encodeToString(secretKey.getBytes()).getBytes(StandardCharsets.UTF_8));
     }
 }

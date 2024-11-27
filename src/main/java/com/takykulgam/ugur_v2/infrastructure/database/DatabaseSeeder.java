@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -23,11 +25,16 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if(jpaStaffRepository.count() == 0) {
-            StaffEntity staff = new StaffEntity("Test", passwordEncoder.encode("123456789"), true);
-            staff.setUpdatedAt(new Date());
-            staff.setCreatedAt(new Date());
-            jpaStaffRepository.save(staff);
-        }
+        jpaStaffRepository.count()
+                .flatMap(count -> {
+                    if (count == 0) {
+                        StaffEntity staff = new StaffEntity("Test", passwordEncoder.encode("123456789"), true);
+                        staff.setUpdatedAt(LocalDateTime.now());
+                        staff.setCreatedAt(LocalDateTime.now());
+                        return jpaStaffRepository.save(staff);
+                    }
+                    return Mono.empty();
+                })
+                .subscribe();
     }
 }

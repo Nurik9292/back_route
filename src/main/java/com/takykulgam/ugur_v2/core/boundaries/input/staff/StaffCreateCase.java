@@ -1,7 +1,8 @@
 package com.takykulgam.ugur_v2.core.boundaries.input.staff;
 
 import com.takykulgam.ugur_v2.core.boundaries.dto.InputStaff;
+import reactor.core.publisher.Mono;
 
 public interface StaffCreateCase {
-    void execute(InputStaff input);
+    Mono<Void> execute(Mono<InputStaff> input);
 }

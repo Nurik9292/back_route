@@ -1,6 +1,8 @@
 package com.takykulgam.ugur_v2.core.boundaries.output;
 
+import reactor.core.publisher.Mono;
+
 public interface Presenter<I,O> {
     O getResponse();
-    void present(boolean success, I item);
+    Mono<Void> present(boolean success, I item);
 }

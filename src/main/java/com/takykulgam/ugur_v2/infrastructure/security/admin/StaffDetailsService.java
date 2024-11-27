@@ -1,15 +1,17 @@
 package com.takykulgam.ugur_v2.infrastructure.security.admin;
 
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
-public class StaffDetailsService implements UserDetailsService {
+public class StaffDetailsService implements ReactiveUserDetailsService {
 
     private final JpaStaffRepository staffRepository;
 
@@ -18,11 +20,21 @@ public class StaffDetailsService implements UserDetailsService {
         this.staffRepository = staffRepository;
     }
 
-    @Override
-    public StaffDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        StaffEntity staff = staffRepository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found " + username));
-        return new StaffDetails(staff, Role.ADMIN);
+    @Override
+    public Mono<UserDetails> findByUsername(String username) {
+        return staffRepository.findByName(username)
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found: " + username)))
+                .map(this::mapToStaffDetails);
+    }
+
+    public Mono<StaffDetails> loadUserByUsernameReactive(String username) {
+        return staffRepository.findByName(username)
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found: " + username)))
+                .map(this::mapToStaffDetails);
+    }
+
+    private StaffDetails mapToStaffDetails(StaffEntity staffEntity) {
+        return new StaffDetails(staffEntity, Role.ADMIN);
     }
 }

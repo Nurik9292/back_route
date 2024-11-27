@@ -1,7 +1,9 @@
 package com.takykulgam.ugur_v2.applications.security;
 
 
+import reactor.core.publisher.Mono;
+
 public interface CustomAuthentication {
 
-    String authenticate(String username, String password);
+    Mono<String> authenticate(String username, String password);
 }

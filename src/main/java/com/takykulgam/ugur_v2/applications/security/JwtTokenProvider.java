@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Map;
 import java.util.function.Function;
 
-public interface JwtToken {
+public interface JwtTokenProvider {
 
     public String extractUsername(String token);
 
@@ -19,5 +19,7 @@ public interface JwtToken {
     long getExpirationTime();
 
     boolean isTokenValid(String token, UserDetails userDetails);
+
+    boolean isTokenValid(String token);
 
 }

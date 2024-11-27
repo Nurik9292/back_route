@@ -2,6 +2,6 @@ package com.takykulgam.ugur_v2.core.boundaries.input.staff;
 
 import reactor.core.publisher.Mono;
 
-public interface RetrieveAllStaffCase {
-    Mono<Void> execute();
+public interface StaffDeleteCase {
+    Mono<Void> execute(long id);
 }
