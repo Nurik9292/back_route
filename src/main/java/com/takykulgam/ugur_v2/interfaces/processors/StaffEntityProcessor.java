@@ -5,11 +5,10 @@ import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class StaffEntityProcessor implements EntityProcessor<StaffEntity> {
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public StaffEntityProcessor(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -25,5 +24,7 @@ public class StaffEntityProcessor implements EntityProcessor<StaffEntity> {
     @Override
     public void preprocessBeforeUpdate(StaffEntity entity) {
         entity.setUpdatedAt(LocalDateTime.now());
+        if(passwordEncoder.matches(entity.getPassword(), entity.getPassword()))
+         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
     }
 }

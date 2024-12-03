@@ -20,6 +20,8 @@ public class StaffEntity implements SessionUser {
     private String name;
     @Column("is_admin")
     private boolean isAdmin;
+    @Column("avatar")
+    private String avatar;
     @JsonIgnore
     private String password;
     @Column("created_at")

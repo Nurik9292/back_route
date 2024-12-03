@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.infrastructure.database;
 
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffRepository;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -9,16 +9,15 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
 
-    private final JpaStaffRepository jpaStaffRepository;
+    private final R2dbcStaffRepository jpaStaffRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DatabaseSeeder(JpaStaffRepository jpaStaffRepository, PasswordEncoder passwordEncoder) {
+    public DatabaseSeeder(R2dbcStaffRepository jpaStaffRepository, PasswordEncoder passwordEncoder) {
         this.jpaStaffRepository = jpaStaffRepository;
         this.passwordEncoder = passwordEncoder;
     }

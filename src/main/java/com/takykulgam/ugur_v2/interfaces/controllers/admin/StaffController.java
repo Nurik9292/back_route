@@ -1,81 +1,103 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
-import com.takykulgam.ugur_v2.core.boundaries.input.staff.StaffDeleteCase;
-import com.takykulgam.ugur_v2.core.boundaries.input.staff.StaffUpdateCase;
-import com.takykulgam.ugur_v2.interfaces.viewmodels.ListStaffViewModel;
-import com.takykulgam.ugur_v2.interfaces.viewmodels.Response;
-import com.takykulgam.ugur_v2.interfaces.viewmodels.StaffViewModel;
-import com.takykulgam.ugur_v2.core.boundaries.dto.InputStaff;
-import com.takykulgam.ugur_v2.core.boundaries.dto.OutputStaff;
-import com.takykulgam.ugur_v2.core.boundaries.input.staff.RetrieveAllStaffCase;
-import com.takykulgam.ugur_v2.core.boundaries.input.staff.StaffCreateCase;
-import com.takykulgam.ugur_v2.core.boundaries.output.Presenter;
+import com.takykulgam.ugur_v2.applications.dto.CreateStaff;
+import com.takykulgam.ugur_v2.applications.dto.MeStaff;
+import com.takykulgam.ugur_v2.applications.dto.OutputStaff;
+import com.takykulgam.ugur_v2.applications.dto.UpdateStaff;
+import com.takykulgam.ugur_v2.applications.iteractor.staff.*;
+import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.infrastructure.storage.FileSystemStorage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+@Log4j2
 @RestController
 @RequestMapping("/admin/staff")
 public class StaffController {
 
-    private final Presenter<OutputStaff, Mono<Response<StaffViewModel>>> presenter;
-    private final Presenter<Flux<OutputStaff>, Mono<Response<ListStaffViewModel>>> presenterAll;
-    private final StaffCreateCase staffCreateCase;
+    private final UseCaseExecutor useCaseExecutor;
     private final RetrieveAllStaffCase retrieveAllStaffCase;
+    private final StaffCreateCase staffCreateCase;
     private final StaffUpdateCase staffUpdateCase;
-    private final StaffDeleteCase staffDelete;
-    private final Presenter<String, Mono<Response<String>>> presenterDelete;
+    private final StaffDeleteCase staffDeleteCase;
+    private final StaffMeUseCase staffMeUseCase;
+    private final FileSystemStorage fileSystemStorage;
 
     @Autowired
     public StaffController(
-            Presenter<OutputStaff, Mono<Response<StaffViewModel>>> presenter,
-            Presenter<Flux<OutputStaff>, Mono<Response<ListStaffViewModel>>> presenterAll,
-            StaffCreateCase staffCreateCase,
+            UseCaseExecutor useCaseExecutor,
             RetrieveAllStaffCase retrieveAllStaffCase,
+            StaffCreateCase staffCreateCase,
             StaffUpdateCase staffUpdateCase,
-            StaffDeleteCase staffDelete,
-            Presenter<String,Mono<Response<String>>> presenterDelete) {
-        this.presenter = presenter;
-        this.presenterAll = presenterAll;
-        this.staffCreateCase = staffCreateCase;
+            StaffDeleteCase staffDeleteCase,
+            StaffMeUseCase staffMeUseCase,
+            FileSystemStorage fileSystemStorage) {
+        this.useCaseExecutor = useCaseExecutor;
         this.retrieveAllStaffCase = retrieveAllStaffCase;
+        this.staffCreateCase = staffCreateCase;
         this.staffUpdateCase = staffUpdateCase;
-        this.staffDelete = staffDelete;
-        this.presenterDelete = presenterDelete;
+        this.staffDeleteCase = staffDeleteCase;
+        this.staffMeUseCase = staffMeUseCase;
+        this.fileSystemStorage = fileSystemStorage;
     }
 
     @GetMapping
-    public Mono<ResponseEntity<Response<ListStaffViewModel>>> getAllStaff() {
-        return retrieveAllStaffCase.execute()
-                .then(presenterAll.getResponse())
-                .map(ResponseEntity::ok);
+    public Flux<OutputStaff>  getAllStaff() {
+        return useCaseExecutor.execute(
+                retrieveAllStaffCase,
+                Mono.empty(),
+                RetrieveAllStaffCase.Output::result);
     }
 
     @PostMapping
-    public Mono<ResponseEntity<Response<StaffViewModel>>> createStaff(@RequestBody InputStaff inputStaff) {
-        return staffCreateCase.execute(Mono.just(inputStaff))
-                .then(presenter.getResponse())
-                .map(ResponseEntity::ok)
-                .switchIfEmpty(Mono.just(ResponseEntity.badRequest().build()));
+    public Mono<OutputStaff> createStaff(@RequestBody CreateStaff createStaff) {
+        System.out.println(createStaff);
+        return useCaseExecutor.execute(
+                staffCreateCase,
+                Mono.just(createStaff).map(CreateStaff::toInput),
+                StaffCreateCase.Output::result);
     }
 
     @PatchMapping("/{id}")
-    public Mono<ResponseEntity<Response<StaffViewModel>>> updateStaff(@PathVariable Long id, @RequestBody InputStaff inputStaff) {
-        inputStaff.setId(id);
-        return staffUpdateCase.execute(Mono.just(inputStaff))
-                .then(presenter.getResponse())
-                .map(ResponseEntity::ok);
+    public Mono<OutputStaff> updateStaff(@PathVariable Long id, @RequestBody UpdateStaff updateStaff) {
+        return useCaseExecutor.execute(
+                staffUpdateCase,
+                Mono.just(updateStaff).map(staff -> staff.toInput(id)),
+                StaffUpdateCase.Output::result);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Response<String>>> deleteStaff(@PathVariable Long id) {
-        return staffDelete.execute(id)
-                .then(presenterDelete.getResponse())
-                .map(ResponseEntity::ok);
+    public Mono<String> deleteStaff(@PathVariable Long id) {
+        return useCaseExecutor.execute(
+                staffDeleteCase,
+                Mono.empty(),
+                StaffDeleteCase.Output::message
+        );
+    }
 
+    @PatchMapping("/me")
+    public Mono<OutputStaff> updateMe(@RequestBody MeStaff meStaff) {
+        return useCaseExecutor.execute(
+                staffMeUseCase,
+                Mono.just(meStaff).map(MeStaff::toInput),
+                StaffMeUseCase.Output::result
+                );
+    }
 
+    @GetMapping(value = "/avatar/{imageName}", produces = MediaType.IMAGE_PNG_VALUE)
+    public Mono<ResponseEntity<Resource>> getStaff(@PathVariable String imageName) {
+        return fileSystemStorage
+                .loadAsResource("avatar/" + imageName)
+                .map(path -> ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(path))
+                .onErrorResume(e -> {
+                    log.error("Ошибка при загрузке изображения: {}", e.getMessage(), e);
+                    return Mono.just(ResponseEntity.notFound().build());
+                });
     }
 }

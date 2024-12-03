@@ -1,5 +1,6 @@
 package com.takykulgam.ugur_v2.infrastructure.exceptions;
 
+import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,5 +23,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleSignatureException(SignatureException ex) {
         ErrorDetails errorDetails = new ErrorDetails(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+    }
+
+
+    @ExceptionHandler(CoreException.class)
+    ResponseEntity<ErrorDetails> handleCoreException(CoreException ex) {
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
     }
 }

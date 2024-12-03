@@ -28,6 +28,9 @@
                 <column name="password" type="varchar(200)">
                     <constraints nullable="false" />
                 </column>
+                <column name="avatar" type="varchar(200)">
+                    <constraints nullable="true" />
+                </column>
                 <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
                     <constraints nullable="false"/>
                 </column>

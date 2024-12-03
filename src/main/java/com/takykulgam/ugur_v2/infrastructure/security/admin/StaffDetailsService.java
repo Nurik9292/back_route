@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2.infrastructure.security.admin;
 
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffRepository;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -13,10 +13,10 @@ import reactor.core.publisher.Mono;
 @Service
 public class StaffDetailsService implements ReactiveUserDetailsService {
 
-    private final JpaStaffRepository staffRepository;
+    private final R2dbcStaffRepository staffRepository;
 
     @Autowired
-    public StaffDetailsService(JpaStaffRepository staffRepository) {
+    public StaffDetailsService(R2dbcStaffRepository staffRepository) {
         this.staffRepository = staffRepository;
     }
 

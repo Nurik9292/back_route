@@ -1,12 +1,13 @@
 package com.takykulgam.ugur_v2.infrastructure.security.admin;
 
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffSessionRepository;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffSessionRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.JwtTokenProviderImpl;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -15,12 +16,12 @@ public class AdminAuthenticationManager implements ReactiveAuthenticationManager
 
     private final JwtTokenProviderImpl jwtTokenProvider;
     private final StaffDetailsService staffDetailsService;
-    private final JpaStaffSessionRepository jpaStaffSessionRepository;
+    private final R2dbcStaffSessionRepository jpaStaffSessionRepository;
 
     @Autowired
     public AdminAuthenticationManager(JwtTokenProviderImpl jwtTokenProvider,
                                       StaffDetailsService staffDetailsService,
-                                      JpaStaffSessionRepository jpaStaffSessionRepository) {
+                                      R2dbcStaffSessionRepository jpaStaffSessionRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.staffDetailsService = staffDetailsService;
         this.jpaStaffSessionRepository = jpaStaffSessionRepository;
@@ -51,6 +52,14 @@ public class AdminAuthenticationManager implements ReactiveAuthenticationManager
 
     private Mono<Authentication> createAuthentication(String username) {
         return staffDetailsService.loadUserByUsernameReactive(username)
-                .map(userDetails -> new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+                .map(userDetails -> {
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                     ReactiveSecurityContextHolder.withSecurityContext(ReactiveSecurityContextHolder.getContext().map(a -> {
+                         a.setAuthentication(auth);
+                         return a;
+                     }));
+                     return auth;
+                });
     }
 }

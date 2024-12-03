@@ -3,7 +3,7 @@ package com.takykulgam.ugur_v2.infrastructure.security.admin;
 import com.takykulgam.ugur_v2.applications.security.CustomAuthentication;
 import com.takykulgam.ugur_v2.applications.security.JwtTokenProvider;
 import com.takykulgam.ugur_v2.applications.security.SessionManager;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.JpaStaffSessionRepository;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +16,7 @@ public class CustomAuthenticationImpl implements CustomAuthentication {
     private final StaffDetailsService staffDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private final SessionManager sessionManager;
-    private final JpaStaffSessionRepository jpaStaffSessionRepository;
+    private final R2dbcStaffSessionRepository jpaStaffSessionRepository;
     private final ReactiveAuthenticationManager authenticationManager;
 
 
@@ -25,7 +25,7 @@ public class CustomAuthenticationImpl implements CustomAuthentication {
             StaffDetailsService staffDetailsService,
             JwtTokenProvider jwtTokenProvider,
             SessionManager sessionManager,
-            JpaStaffSessionRepository jpaStaffSessionRepository,
+            R2dbcStaffSessionRepository jpaStaffSessionRepository,
             ReactiveAuthenticationManager authenticationManager) {
         this.staffDetailsService = staffDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
