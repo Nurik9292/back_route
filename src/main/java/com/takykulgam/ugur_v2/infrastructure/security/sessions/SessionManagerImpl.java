@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.EnumMap;
+
 @Component
 public class SessionManagerImpl implements SessionManager {
 
@@ -16,22 +18,36 @@ public class SessionManagerImpl implements SessionManager {
     @Autowired
     public SessionManagerImpl(R2dbcStaffSessionRepository jpaStaffSessionRepository) {
         this.jpaStaffSessionRepository = jpaStaffSessionRepository;
+
+        commands.put(EntitySession.STAFF, (user) ->
+            Mono
+                .just(user)
+                .cast(StaffEntity.class)
+                .flatMap(staff ->  jpaStaffSessionRepository.deleteByStaffId(staff.getId()).thenReturn(staff.getId()))
+                .flatMap(staffId -> {
+                StaffSessionEntity newSession = new StaffSessionEntity();
+                newSession.setStaffId(staffId);
+                return Mono.just(newSession);
+                })
+        );
     }
 
     @Override
-    public Mono<StaffSessionEntity> refreshSession(SessionUser sessionUser) {
+    public Mono<StaffSessionEntity> refreshSession(SessionUser sessionUser, EntitySession entitySession) {
         return Mono.just(sessionUser)
                 .cast(StaffEntity.class)
-                .flatMap(this::actionStaff);
+                .flatMap(staffEntity -> commands.get(entitySession).action(staffEntity));
     }
 
-    private Mono<StaffSessionEntity> actionStaff(StaffEntity staff) {
-        return Mono.justOrEmpty(staff)
-                .flatMap(staffEntity ->  jpaStaffSessionRepository.deleteByStaffId(staffEntity.getId()))
-                .then(Mono.defer(() -> {
-                    StaffSessionEntity newSession = new StaffSessionEntity();
-                    newSession.setStaffId(staff.getId());
-                    return Mono.just(newSession);
-                }));
+
+    public enum EntitySession {
+        STAFF
     }
+
+    interface Command {
+        Mono<StaffSessionEntity> action(SessionUser sessionUser);
+    }
+
+    private final EnumMap<EntitySession, Command> commands = new EnumMap<>(EntitySession.class);
+
 }

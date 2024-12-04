@@ -4,7 +4,6 @@ import com.takykulgam.ugur_v2.utils.rest.auth.AuthContract;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 public abstract class ApiRequest<T> implements ApiContract<T> {
 

@@ -4,6 +4,7 @@ import com.takykulgam.ugur_v2.applications.security.CustomAuthentication;
 import com.takykulgam.ugur_v2.applications.security.JwtTokenProvider;
 import com.takykulgam.ugur_v2.applications.security.SessionManager;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffSessionRepository;
+import com.takykulgam.ugur_v2.infrastructure.security.sessions.SessionManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +45,7 @@ public class CustomAuthenticationImpl implements CustomAuthentication {
 
     private Mono<String> session(StaffDetails staffDetails) {
         String token = jwtTokenProvider.generateToken(staffDetails);
-        return sessionManager.refreshSession(staffDetails.getStaffEntity())
+        return sessionManager.refreshSession(staffDetails.getStaffEntity(), SessionManagerImpl.EntitySession.STAFF)
                 .flatMap(session -> {
                     session.setStaffId(staffDetails.getStaffEntity().getId());
                     session.setToken(token);
