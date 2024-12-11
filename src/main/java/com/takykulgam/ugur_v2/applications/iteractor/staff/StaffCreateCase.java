@@ -1,9 +1,9 @@
 package com.takykulgam.ugur_v2.applications.iteractor.staff;
 
-import com.takykulgam.ugur_v2.applications.dto.OutputStaff;
-import com.takykulgam.ugur_v2.applications.gateways.StaffRepository;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
+import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
-import com.takykulgam.ugur_v2.core.domain.entities.staff.Staff;
+import com.takykulgam.ugur_v2.core.domain.entities.Staff;
 import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
 import reactor.core.publisher.Mono;
 

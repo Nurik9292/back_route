@@ -1,31 +1,29 @@
 package com.takykulgam.ugur_v2.interfaces.gateway;
 
-import com.takykulgam.ugur_v2.applications.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.dto.OutputStaff;
-import com.takykulgam.ugur_v2.core.domain.exceptions.staff.StaffNotFoundException;
+import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
+import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.admin.StaffDetails;
+import com.takykulgam.ugur_v2.infrastructure.storage.FileSystem;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
 import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutPutStaffMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-@Repository
 @Transactional(readOnly = true)
 public class StaffRepositoryImpl implements StaffRepository {
 
     private final R2dbcStaffRepository staffRepository;
     private final EntityProcessor<StaffEntity> staffEntityProcessor;
 
-    @Autowired
-    public StaffRepositoryImpl(R2dbcStaffRepository staffRepository, EntityProcessor<StaffEntity> staffEntityProcessor) {
+    public StaffRepositoryImpl(R2dbcStaffRepository staffRepository,
+                               EntityProcessor<StaffEntity> staffEntityProcessor) {
         this.staffRepository = staffRepository;
         this.staffEntityProcessor = staffEntityProcessor;
     }
@@ -34,14 +32,14 @@ public class StaffRepositoryImpl implements StaffRepository {
     public Mono<OutputStaff> findById(long id) {
         return staffRepository.findById(id)
                 .map(EntityOutPutStaffMapper::toDto)
-                .switchIfEmpty(Mono.error(new StaffNotFoundException("Staff with ID " + id + " not found")));
+                .switchIfEmpty(Mono.error(new CoreException("Staff with ID " + id + " not found")));
     }
 
     @Override
     public Mono<OutputStaff> findByName(String name) {
         return staffRepository.findByName(name)
                 .map(EntityOutPutStaffMapper::toDto)
-                .switchIfEmpty(Mono.error(new StaffNotFoundException("Staff with ID " + name + " not found")));
+                .switchIfEmpty(Mono.error(new CoreException("Staff with ID " + name + " not found")));
     }
 
     @Override
@@ -75,7 +73,6 @@ public class StaffRepositoryImpl implements StaffRepository {
        return getAuthenticatedStaff()
         .flatMap(staffDetails -> Mono.just(staffDetails.getStaffEntity()))
         .flatMap(entity -> {
-            System.out.println("Password: " + password);
             if (Objects.nonNull(avatar)) entity.setAvatar(avatar);
             if (Objects.nonNull(name)) entity.setName(name);
             if (Objects.nonNull(password) && !password.isBlank()) entity.setPassword(password);
@@ -112,6 +109,12 @@ public class StaffRepositoryImpl implements StaffRepository {
     @Override
     public Mono<Boolean> existsByName(String name) {
         return staffRepository.existsByName(name);
+    }
+
+
+    @Override
+    public Mono<String> findByIdGetPassword(long id) {
+        return staffRepository.findByIdGetPassword(id);
     }
 
 }

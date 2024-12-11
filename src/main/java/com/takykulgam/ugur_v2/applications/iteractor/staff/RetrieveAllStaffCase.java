@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2.applications.iteractor.staff;
 
-import com.takykulgam.ugur_v2.applications.gateways.StaffRepository;
-import com.takykulgam.ugur_v2.applications.dto.OutputStaff;
+import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 
 import reactor.core.publisher.Flux;
@@ -21,6 +21,7 @@ public class RetrieveAllStaffCase
     public Output execute(Mono<Void> request) {
         return new Output(staffRepository.findAll());
     }
+
 
     public record Output(Flux<OutputStaff> result) {}
 }

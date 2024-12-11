@@ -1,9 +1,9 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
-import com.takykulgam.ugur_v2.applications.dto.CreateStaff;
-import com.takykulgam.ugur_v2.applications.dto.MeStaff;
-import com.takykulgam.ugur_v2.applications.dto.OutputStaff;
-import com.takykulgam.ugur_v2.applications.dto.UpdateStaff;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.CreateStaff;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.MeStaff;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.UpdateStaff;
 import com.takykulgam.ugur_v2.applications.iteractor.staff.*;
 import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystemStorage;
@@ -20,6 +20,8 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/admin/staff")
 public class StaffController {
+
+    private static final String PATH_AVATAR = "avatar/";
 
     private final UseCaseExecutor useCaseExecutor;
     private final RetrieveAllStaffCase retrieveAllStaffCase;
@@ -91,13 +93,15 @@ public class StaffController {
     }
 
     @GetMapping(value = "/avatar/{imageName}", produces = MediaType.IMAGE_PNG_VALUE)
-    public Mono<ResponseEntity<Resource>> getStaff(@PathVariable String imageName) {
+    public Mono<ResponseEntity<Resource>> getStaffAvatar(@PathVariable String imageName) {
+
         return fileSystemStorage
-                .loadAsResource("avatar/" + imageName)
+                .loadAsResource(PATH_AVATAR + imageName)
                 .map(path -> ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(path))
                 .onErrorResume(e -> {
                     log.error("Ошибка при загрузке изображения: {}", e.getMessage(), e);
                     return Mono.just(ResponseEntity.notFound().build());
                 });
     }
+
 }

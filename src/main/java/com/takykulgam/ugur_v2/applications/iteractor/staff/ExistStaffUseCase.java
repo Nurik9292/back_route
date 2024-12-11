@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.applications.iteractor.staff;
 
-import com.takykulgam.ugur_v2.applications.gateways.StaffRepository;
+import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import reactor.core.publisher.Mono;
 

@@ -24,7 +24,7 @@ public class StaffEntityProcessor implements EntityProcessor<StaffEntity> {
     @Override
     public void preprocessBeforeUpdate(StaffEntity entity) {
         entity.setUpdatedAt(LocalDateTime.now());
-        if(passwordEncoder.matches(entity.getPassword(), entity.getPassword()))
-         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        if(entity.getPassword().matches("^\\d+$"))
+            entity.setPassword(passwordEncoder.encode(entity.getPassword()));
     }
 }

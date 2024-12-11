@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.takykulgam</groupId>
     <artifactId>ugur_v2</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>ugur_v2</name>
     <description>ugur_v2</description>
     <url/>

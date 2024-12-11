@@ -11,6 +11,9 @@
 
     <include file="classpath:db/changelog/create/V1__create_staff_table.xml" />
     <include file="classpath:db/changelog/create/V2__create_staff_sessions_table.xml" />
+    <include file="classpath:db/changelog/create/V3__create_city_table.xml" />
+    <include file="classpath:db/changelog/create/V4__create_banner_table.xml" />
+
 
 
 </databaseChangeLog>

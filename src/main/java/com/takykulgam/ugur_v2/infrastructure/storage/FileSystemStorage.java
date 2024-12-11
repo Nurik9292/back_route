@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -48,6 +49,24 @@ public class FileSystemStorage implements FileSystem {
     }
 
     @Override
+    public Mono<Path> store(FilePart image, final Path dir) {
+        return Mono.fromCallable(() -> {
+                    Path targetDir = storagePath.resolve(dir);
+                    if (!Files.exists(targetDir))
+                        Files.createDirectories(targetDir);
+
+                    String name = UUID.randomUUID() + ".png";
+                    return targetDir.resolve(name);
+                })
+                .flatMap(targetPath -> image.transferTo(targetPath.toFile())
+                        .thenReturn(targetPath)
+                )
+                .subscribeOn(Schedulers.boundedElastic())
+                .onErrorMap(e -> new RuntimeException("Failed to store image", e))
+                .doOnError(e -> log.error("Ошибка при записи файла: {}", e.getMessage(), e));
+    }
+
+    @Override
     public Mono<byte[]> load(final String fileName) {
         return Mono.fromCallable(() -> {
             Path path = storagePath.resolve(fileName);
@@ -86,6 +105,27 @@ public class FileSystemStorage implements FileSystem {
                         return Mono.error(new FileNotFoundException("Could not read file: " + fileName));
                     }
                 });
+    }
+
+
+    @Override
+    public Mono<Void> delete(final String fileName) {
+        return Mono.fromRunnable(() -> {
+                    Path filePath = storagePath.resolve(fileName);
+                    try {
+                        if (Files.exists(filePath)) {
+                            Files.delete(filePath);
+                            log.info("File deleted successfully: {}", fileName);
+                        } else {
+                            log.warn("File not found for deletion: {}", fileName);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error deleting file: " + fileName, e);
+                    }
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .doOnError(e -> log.error("Error deleting file: {}", e.getMessage(), e))
+                .then();
     }
 
 }
