@@ -1,43 +1,48 @@
 package com.takykulgam.ugur_v2.applications.iteractor.staff;
 
-import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
-import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import com.takykulgam.ugur_v2.core.domain.entities.Staff;
-import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
+import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
+import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 
+@Log4j2
 public class StaffCreateCase implements GenericUseCase<Mono<StaffCreateCase.Input>, StaffCreateCase.Output> {
 
     private final StaffRepository staffRepository;
-    private final ExistStaffUseCase existStaffUseCase;
 
 
-    public StaffCreateCase(StaffRepository staffRepository, ExistStaffUseCase existStaffUseCase) {
+    public StaffCreateCase(StaffRepository staffRepository) {
         this.staffRepository = staffRepository;
-        this.existStaffUseCase = existStaffUseCase;
     }
-
 
 
     @Override
     public Output execute(Mono<Input> request) {
-        Mono<OutputStaff> outputStaff = request.flatMap(input ->
-                existStaffUseCase.execute(Mono.just(new ExistStaffUseCase.Input(input.name())))
-                        .isExist()
-                        .flatMap(isExist -> {
-                            if (isExist)
-                                return Mono.error(new CoreException("Staff member with this name already exists."));
-                            else new Staff(input.name(), input.password, input.isAdmin);
-                            return staffRepository.save(input.name(), input.password(), input.isAdmin());
-                        })
-                );
-
-        return new Output(outputStaff);
+        return new Output(request
+                .map(Input::toStaff)
+                .flatMap(this::validateStaff)
+                .flatMap(this::saveStaff)
+                .doOnSuccess(result -> log.info("Staff successfully store: {}", result))
+                .doOnError(error -> log.error("Error store staff", error)));
     }
 
-    public record Input(String name, String password, boolean isAdmin) {
+    private Mono<Staff> validateStaff(Staff staff) {
+        staff.validateName();
+        staff.validatePassword();
+        return staff.checkExistName(staffRepository).thenReturn(staff);
+    }
 
+    private Mono<OutputStaff> saveStaff(Staff staff) {
+        return staffRepository.save(staff.getName(), staff.getPassword().value(), staff.isAdmin());
+    }
+
+
+    public record Input(String name, String password, boolean isAdmin) {
+        public Staff toStaff() {
+            return new Staff(name, password, isAdmin);
+        }
     }
 
     public record Output(Mono<OutputStaff> result) {}

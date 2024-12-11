@@ -48,13 +48,13 @@ public class UseCaseImplementer {
     }
 
     @Bean
-    public StaffCreateCase staffCreateCase(StaffRepository staffRepository, ExistStaffUseCase existStaffUseCase) {
-        return new StaffCreateCase(staffRepository, existStaffUseCase);
+    public StaffCreateCase staffCreateCase(StaffRepository staffRepository) {
+        return new StaffCreateCase(staffRepository);
     }
 
     @Bean
-    public StaffUpdateCase staffUpdateCase(StaffRepository staffRepository, GetStaffByIdUseCase getStaffByIdUseCase) {
-        return new StaffUpdateCase(getStaffByIdUseCase, staffRepository);
+    public StaffUpdateCase staffUpdateCase(StaffRepository staffRepository) {
+        return new StaffUpdateCase(staffRepository);
     }
 
     @Bean

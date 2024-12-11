@@ -2,7 +2,9 @@ package com.takykulgam.ugur_v2.core.domain.entities;
 
 import com.takykulgam.ugur_v2.applications.security.CustomerPasswordEncoder;
 import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
+import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import lombok.Getter;
+import reactor.core.publisher.Mono;
 
 import java.util.Base64;
 import java.util.Objects;
@@ -10,6 +12,7 @@ import java.util.Objects;
 @Getter
 public class Staff {
 
+    private long id;
     private final String name;
     private final boolean isAdmin;
     private final Password password;
@@ -26,6 +29,13 @@ public class Staff {
     }
 
     public Staff(String name, String rawPassword, boolean isAdmin) {
+        this.name = name;
+        this.isAdmin = isAdmin;
+        this.password = new Password(rawPassword);
+    }
+
+    public Staff(long id, String name, String rawPassword, boolean isAdmin) {
+        this.id = id;
         this.name = name;
         this.isAdmin = isAdmin;
         this.password = new Password(rawPassword);
@@ -68,6 +78,14 @@ public class Staff {
         }
     }
 
+    public Mono<Void> checkExistName(StaffRepository staffRepository) {
+        return staffRepository.existsByName(name)
+                .flatMap(exists -> {
+                    if (exists) return Mono.error(new CoreException("Staff member with this name already exists."));
+                    return Mono.empty();
+                });
+    }
+
     public static Password createPassword(String rawPassword) {
         return new Password(rawPassword);
     }
@@ -92,12 +110,9 @@ public class Staff {
             return passwordEncoder.matches(rawPassword, this.value);
         }
 
-        public void matches() {
 
-        }
-
-            @Override
-            public String toString() {
+        @Override
+        public String toString() {
                 return "******";
             }
 
@@ -118,9 +133,6 @@ public class Staff {
 
     @Override
     public String toString() {
-        return "Staff{" +
-                "name='" + name + '\'' +
-                ", isAdmin=" + isAdmin +
-                '}';
+        return String.format("Staff{name='%s', isAdmin=%b}", name, isAdmin);
     }
 }
