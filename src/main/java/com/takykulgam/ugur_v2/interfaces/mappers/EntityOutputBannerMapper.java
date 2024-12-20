@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2.interfaces.mappers;
 
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
 
 public class EntityOutputBannerMapper {
 

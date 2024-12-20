@@ -1,8 +1,7 @@
 package com.takykulgam.ugur_v2.infrastructure.persistnces.entities;
 
-import com.takykulgam.ugur_v2.infrastructure.security.sessions.Session;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -10,17 +9,22 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@Table(name = "staff_sessions")
-public class StaffSessionEntity implements Session {
+@Table("stops")
+public class StopEntity {
 
     @Id
     private Long id;
-    private String token;
-    @Column("staff_id")
-    private long staffId;
+    private String name;
+    private int order;
+    @Column("is_intermediate")
+    private boolean isIntermediate;
+    @Column("route_direction_id")
+    private Long RouteDirectionId;
+    @Column("location")
+    private Point location;
     @Column("created_at")
     private LocalDateTime createdAt;
     @Column("updated_at")
     private LocalDateTime updatedAt;
+
 }

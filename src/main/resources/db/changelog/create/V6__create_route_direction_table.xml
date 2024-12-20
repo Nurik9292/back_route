@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="6" author="nury">
+        <preConditions>
+            <not>
+                <tableExists tableName="route_directions" />
+            </not>
+        </preConditions>
+        <createTable tableName="route_directions">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="direction" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="route_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="geometry(LineString, 4326)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="route_directions"
+                                 baseColumnNames="route_id"
+                                 constraintName="rote_direction_route_fk"
+                                 referencedTableName="routes"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

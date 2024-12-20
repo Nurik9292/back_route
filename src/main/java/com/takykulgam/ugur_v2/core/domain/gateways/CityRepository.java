@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.core.domain.gateways;
 
-import com.takykulgam.ugur_v2.interfaces.dto.city.OutputCity;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

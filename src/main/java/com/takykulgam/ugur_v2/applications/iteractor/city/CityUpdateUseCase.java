@@ -4,7 +4,7 @@ import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import com.takykulgam.ugur_v2.core.domain.entities.City;
 import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
 import com.takykulgam.ugur_v2.core.domain.gateways.CityRepository;
-import com.takykulgam.ugur_v2.interfaces.dto.city.OutputCity;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 

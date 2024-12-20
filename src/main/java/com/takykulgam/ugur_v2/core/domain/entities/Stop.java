@@ -9,9 +9,9 @@ import java.util.Objects;
 public class Stop {
 
     private long id;
-    private String title;
-    private Point location;
-    private City city;
+    private final String title;
+    private final Point location;
+    private final City city;
 
     public Stop(String title, Point location, City city) {
         this.title = title;
@@ -37,15 +37,7 @@ public class Stop {
     public void validateLocation() {
         if (location == null)
             throw new CoreException("Координаты остановки не заданы.");
-
-        double lat = location.x;
-        double lng = location.y;
-        if (lat < -37 || lat > 39) {
-            throw new IllegalArgumentException("Широта должна быть в диапазоне от -37 до 39.");
-        }
-        if (lng < -57 || lng > 58) {
-            throw new IllegalArgumentException("Долгота должна быть в диапазоне от -57 до 58.");
-        }
+        location.validation();
     }
 
     public void validateCity() {
@@ -54,27 +46,31 @@ public class Stop {
     }
 
     public record Point(double x, double y) {
+
+        public void validation() {
+            if (x > 35.00 && x < 42.00)
+                throw new CoreException("Широта должна быть в диапазоне от 35.00 до 42.00");
+
+            if (y > 52.00 && y < 67.00)
+                throw new CoreException("Долгота должна быть в диапазоне от 52.00 до 67.00");
+        }
+
         @Override
         public String toString() {
-            return "(" + x + ", " + y + ")";
+            return "(%s, %s)".formatted(x, y);
         }
     }
 
     public record City(long id) {
         @Override
         public String toString() {
-            return "(" + id + ")";
+            return "(%d)".formatted(id);
         }
     }
 
     @Override
     public String toString() {
-        return "Stop{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", location=" + location +
-                ", city=" + city +
-                '}';
+        return "Stop{id=%d, title='%s', location=%s, city=%s}".formatted(id, title, location, city);
     }
 
     @Override

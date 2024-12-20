@@ -4,7 +4,7 @@ import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
 import com.takykulgam.ugur_v2.core.domain.gateways.BannerRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcBannerRepository;
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
 import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutputBannerMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

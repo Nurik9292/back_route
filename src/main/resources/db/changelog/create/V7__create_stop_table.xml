@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="6" author="nury">
+        <preConditions>
+            <not>
+                <tableExists tableName="stops" />
+            </not>
+        </preConditions>
+        <createTable tableName="stops">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_intermediate" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="geometry(Point, 4326)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="route_direction_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="stops"
+                                 baseColumnNames="route_direction_id"
+                                 constraintName="stop_rote_direction_fk"
+                                 referencedTableName="route_directions"
+                                 referencedColumnNames="id"
+                                 onDelete="SET NULL"/>
+    </changeSet>
+
+</databaseChangeLog>

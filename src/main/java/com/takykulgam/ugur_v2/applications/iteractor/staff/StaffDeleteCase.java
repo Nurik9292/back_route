@@ -3,11 +3,10 @@ package com.takykulgam.ugur_v2.applications.iteractor.staff;
 import com.takykulgam.ugur_v2.applications.iteractor.image.DeleteImageService;
 import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
-import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputStaff;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class StaffDeleteCase implements GenericUseCase<Mono<StaffDeleteCase.Input>, StaffDeleteCase.Output> {
 

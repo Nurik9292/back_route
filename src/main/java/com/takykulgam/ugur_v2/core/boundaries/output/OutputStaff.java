@@ -1,4 +1,4 @@
-package com.takykulgam.ugur_v2.interfaces.dto.staff;
+package com.takykulgam.ugur_v2.core.boundaries.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

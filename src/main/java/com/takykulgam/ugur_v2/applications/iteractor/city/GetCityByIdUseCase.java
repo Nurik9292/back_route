@@ -2,7 +2,7 @@ package com.takykulgam.ugur_v2.applications.iteractor.city;
 
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import com.takykulgam.ugur_v2.core.domain.gateways.CityRepository;
-import com.takykulgam.ugur_v2.interfaces.dto.city.OutputCity;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
 import reactor.core.publisher.Mono;
 
 public class GetCityByIdUseCase implements GenericUseCase<Mono<GetCityByIdUseCase.Input>, GetCityByIdUseCase.Output> {

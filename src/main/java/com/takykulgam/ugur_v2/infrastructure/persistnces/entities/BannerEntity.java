@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class BannerEntity {
 
     @Id
-    private long id;
+    private Long id;
 
     @Column("image_url")
     private String imageUrl;

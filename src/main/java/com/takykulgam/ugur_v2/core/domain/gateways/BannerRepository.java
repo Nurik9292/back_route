@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.core.domain.gateways;
 
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

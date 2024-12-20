@@ -3,13 +3,13 @@ package com.takykulgam.ugur_v2.applications.iteractor.staff;
 import com.takykulgam.ugur_v2.applications.security.CustomerPasswordEncoder;
 import com.takykulgam.ugur_v2.core.domain.entities.Staff;
 import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
-import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputStaff;
 import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.applications.iteractor.image.SaveImageService;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
+import com.takykulgam.ugur_v2.utils.ImagePathUtils;
 import reactor.core.publisher.Mono;
 
-import java.nio.file.Paths;
 import java.util.Objects;
 
 public class StaffMeUseCase implements GenericUseCase<Mono<StaffMeUseCase.Input>, StaffMeUseCase.Output> {
@@ -17,7 +17,6 @@ public class StaffMeUseCase implements GenericUseCase<Mono<StaffMeUseCase.Input>
     private final StaffRepository staffRepository;
     private final SaveImageService saveImageService;
     private final CustomerPasswordEncoder customerPasswordEncoder;
-    private static final String DEFAULT_PATH = "avatar";
 
     public StaffMeUseCase(StaffRepository staffRepository,
                           SaveImageService saveImageService,
@@ -29,10 +28,10 @@ public class StaffMeUseCase implements GenericUseCase<Mono<StaffMeUseCase.Input>
 
     @Override
     public Output execute(Mono<Input> request) {
-        return new Output(
-                request
-                        .flatMap(this::processRequest)
-                        .onErrorMap(error -> new CoreException("Error processing staff update: " + error.getMessage()))
+        return new Output(request
+                    .flatMap(this::processRequest)
+                    .onErrorMap(error -> new CoreException(
+                        String.format("Error processing staff update: %s", error.getMessage())))
         );
     }
 
@@ -65,7 +64,7 @@ public class StaffMeUseCase implements GenericUseCase<Mono<StaffMeUseCase.Input>
 
     private Mono<String> saveImage(Staff staff) {
         return saveImageService
-                .execute(Mono.just(new SaveImageService.InputBase64(staff.getAvatar(), Paths.get(DEFAULT_PATH))))
+                .execute(Mono.just(new SaveImageService.InputBase64(staff.getAvatar(), ImagePathUtils.AVATAR_PATH)))
                 .path();
     }
 

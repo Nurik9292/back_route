@@ -2,7 +2,7 @@ package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
 import com.takykulgam.ugur_v2.interfaces.dto.staff.CreateStaff;
 import com.takykulgam.ugur_v2.interfaces.dto.staff.MeStaff;
-import com.takykulgam.ugur_v2.interfaces.dto.staff.OutputStaff;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputStaff;
 import com.takykulgam.ugur_v2.interfaces.dto.staff.UpdateStaff;
 import com.takykulgam.ugur_v2.applications.iteractor.staff.*;
 import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;

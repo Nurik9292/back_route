@@ -4,16 +4,14 @@ import com.takykulgam.ugur_v2.applications.iteractor.image.SaveImageService;
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import com.takykulgam.ugur_v2.core.domain.entities.Banner;
 import com.takykulgam.ugur_v2.core.domain.gateways.BannerRepository;
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
+import com.takykulgam.ugur_v2.utils.ImagePathUtils;
 import reactor.core.publisher.Mono;
-
-import java.nio.file.Paths;
 
 public class BannerCreateUseCase implements GenericUseCase<Mono<BannerCreateUseCase.Input>, BannerCreateUseCase.Output> {
 
     private final BannerRepository bannerRepository;
     private final SaveImageService saveImageService;
-    private static final String DEFAULT_PATH = "banners";
 
     public BannerCreateUseCase(BannerRepository bannerRepository, SaveImageService saveImageService) {
         this.bannerRepository = bannerRepository;
@@ -39,7 +37,7 @@ public class BannerCreateUseCase implements GenericUseCase<Mono<BannerCreateUseC
     }
 
     private SaveImageService.InputBase64 base64ToInput(Banner banner) {
-        return new SaveImageService.InputBase64(banner.banner(), Paths.get(DEFAULT_PATH));
+        return new SaveImageService.InputBase64(banner.banner(), ImagePathUtils.BANNER_PATH);
     }
 
     public record Input(String banner) {

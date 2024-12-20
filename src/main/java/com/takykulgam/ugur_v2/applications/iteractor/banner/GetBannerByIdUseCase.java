@@ -2,7 +2,7 @@ package com.takykulgam.ugur_v2.applications.iteractor.banner;
 
 import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import com.takykulgam.ugur_v2.core.domain.gateways.BannerRepository;
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
 import reactor.core.publisher.Mono;
 
 public class GetBannerByIdUseCase implements GenericUseCase<Mono<GetBannerByIdUseCase.Input>, GetBannerByIdUseCase.Output> {

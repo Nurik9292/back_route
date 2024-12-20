@@ -5,7 +5,7 @@ import com.takykulgam.ugur_v2.applications.iteractor.city.CityDeleteUseCase;
 import com.takykulgam.ugur_v2.applications.iteractor.city.CityUpdateUseCase;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import com.takykulgam.ugur_v2.interfaces.dto.city.CreateCity;
-import com.takykulgam.ugur_v2.interfaces.dto.city.OutputCity;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
 import com.takykulgam.ugur_v2.applications.iteractor.city.CityCreateUseCase;
 import com.takykulgam.ugur_v2.applications.iteractor.city.RetrieveAllCityUseCase;
 import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;

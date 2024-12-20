@@ -7,7 +7,7 @@ import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystemStorage;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import com.takykulgam.ugur_v2.interfaces.dto.banner.CreateBanner;
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

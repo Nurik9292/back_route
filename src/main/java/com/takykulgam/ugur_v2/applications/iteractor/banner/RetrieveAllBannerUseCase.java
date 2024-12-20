@@ -4,7 +4,7 @@ import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
 import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
 import com.takykulgam.ugur_v2.core.domain.gateways.BannerRepository;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
-import com.takykulgam.ugur_v2.interfaces.dto.banner.OutputBanner;
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
 import com.takykulgam.ugur_v2.utils.PaginationUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
