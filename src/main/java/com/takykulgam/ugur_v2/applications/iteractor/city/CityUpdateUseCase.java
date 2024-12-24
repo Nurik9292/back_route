@@ -44,10 +44,8 @@ public class CityUpdateUseCase implements GenericUseCase<Mono<CityUpdateUseCase.
     }
 
     private Mono<OutputCity> updateCity(City city) {
-        return cityRepository.update(city.getId(), city.getTitle())
-                .map(updatedCity -> new OutputCity(updatedCity.id(), updatedCity.title()));
+        return cityRepository.update(city.getId(), city.getTitle());
     }
-
 
 
     public record Input(long id, String title) {

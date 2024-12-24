@@ -31,14 +31,14 @@ public class StaffRepositoryImpl implements StaffRepository {
     public Mono<OutputStaff> findById(long id) {
         return staffRepository.findById(id)
                 .map(EntityOutPutStaffMapper::toDto)
-                .switchIfEmpty(Mono.error(new CoreException("Staff with ID " + id + " not found")));
+                .switchIfEmpty(Mono.error(new CoreException("Staff with ID %d not found".formatted(id))));
     }
 
     @Override
     public Mono<OutputStaff> findByName(String name) {
         return staffRepository.findByName(name)
                 .map(EntityOutPutStaffMapper::toDto)
-                .switchIfEmpty(Mono.error(new CoreException("Staff with ID " + name + " not found")));
+                .switchIfEmpty(Mono.error(new CoreException("Staff with ID %s not found".formatted(name))));
     }
 
     @Override

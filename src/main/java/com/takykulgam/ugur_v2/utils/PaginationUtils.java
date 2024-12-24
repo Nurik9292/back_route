@@ -1,8 +1,11 @@
 package com.takykulgam.ugur_v2.utils;
 
+import com.takykulgam.ugur_v2.core.boundaries.output.OutputStop;
+import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import reactor.core.publisher.Flux;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class PaginationUtils {
 
@@ -22,5 +25,9 @@ public class PaginationUtils {
     public static boolean isLastPage(int totalElements, int page, int size) {
         int totalPages = (int) Math.ceil((double) totalElements / size);
         return page >= totalPages;
+    }
+
+    public static <T> PageResult<T> createPage(List<T> stops, int fullListSize, int page, int size) {
+        return new PageResult<>(stops, PaginationUtils.isLastPage(fullListSize, page,size));
     }
 }

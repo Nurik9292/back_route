@@ -15,16 +15,26 @@ public class StopEntity {
     @Id
     private Long id;
     private String name;
+    @Column("order_index")
     private int order;
     @Column("is_intermediate")
     private boolean isIntermediate;
     @Column("route_direction_id")
     private Long RouteDirectionId;
+    @Column("city_id")
+    private Long cityId;
     @Column("location")
     private Point location;
     @Column("created_at")
     private LocalDateTime createdAt;
     @Column("updated_at")
     private LocalDateTime updatedAt;
+
+    public StopEntity(String name, Long cityId) {
+        this.name = name;
+        this.cityId = cityId;
+        this.order = 0;
+        this.isIntermediate = false;
+    }
 
 }

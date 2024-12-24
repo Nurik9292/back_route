@@ -9,7 +9,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-    <changeSet id="6" author="nury">
+    <changeSet id="7" author="nury">
         <preConditions>
             <not>
                 <tableExists tableName="stops" />
@@ -22,7 +22,7 @@
             <column name="name" type="varchar(150)">
                 <constraints nullable="false"/>
             </column>
-            <column name="order" type="integer">
+            <column name="order_index" type="integer">
                 <constraints nullable="false"/>
             </column>
             <column name="is_intermediate" type="boolean">
@@ -32,6 +32,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="route_direction_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="city_id" type="BIGINT">
                 <constraints nullable="true" />
             </column>
             <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
@@ -46,6 +49,13 @@
                                  baseColumnNames="route_direction_id"
                                  constraintName="stop_rote_direction_fk"
                                  referencedTableName="route_directions"
+                                 referencedColumnNames="id"
+                                 onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint baseTableName="stops"
+                                 baseColumnNames="city_id"
+                                 constraintName="stop_city_fk"
+                                 referencedTableName="cities"
                                  referencedColumnNames="id"
                                  onDelete="SET NULL"/>
     </changeSet>

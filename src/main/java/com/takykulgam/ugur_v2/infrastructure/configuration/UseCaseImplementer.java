@@ -5,19 +5,18 @@ import com.takykulgam.ugur_v2.applications.iteractor.banner.BannerDeleteUseCase;
 import com.takykulgam.ugur_v2.applications.iteractor.banner.GetBannerByIdUseCase;
 import com.takykulgam.ugur_v2.applications.iteractor.banner.RetrieveAllBannerUseCase;
 import com.takykulgam.ugur_v2.applications.iteractor.city.*;
+import com.takykulgam.ugur_v2.applications.iteractor.geo.PointCreateUseCase;
 import com.takykulgam.ugur_v2.applications.iteractor.image.DeleteImageService;
-import com.takykulgam.ugur_v2.core.domain.gateways.BannerRepository;
-import com.takykulgam.ugur_v2.core.domain.gateways.CityRepository;
-import com.takykulgam.ugur_v2.core.domain.gateways.ImageRepository;
+import com.takykulgam.ugur_v2.applications.iteractor.stop.*;
+import com.takykulgam.ugur_v2.core.domain.gateways.*;
 import com.takykulgam.ugur_v2.applications.iteractor.image.SaveImageService;
 import com.takykulgam.ugur_v2.applications.iteractor.staff.*;
 import com.takykulgam.ugur_v2.applications.security.CustomAuthentication;
 import com.takykulgam.ugur_v2.applications.security.CustomerPasswordEncoder;
 import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
-import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
-import com.takykulgam.ugur_v2.infrastructure.storage.FileSystem;
 import com.takykulgam.ugur_v2.interfaces.presenters.SimpleExecutor;
 
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -87,6 +86,11 @@ public class UseCaseImplementer {
     }
 
     @Bean
+    public FetchAllCityUseCase fetchAllCityUseCase(CityRepository cityRepository) {
+        return new FetchAllCityUseCase(cityRepository);
+    }
+
+    @Bean
     public CityCreateUseCase cityCreateUseCase(CityRepository cityRepository) {
         return new CityCreateUseCase(cityRepository);
     }
@@ -127,6 +131,31 @@ public class UseCaseImplementer {
     }
 
     @Bean
+    public GetStopByIdUseCase getStopByIdUseCase(StopRepository stopRepository) {
+        return new GetStopByIdUseCase(stopRepository);
+    }
+
+    @Bean
+    public CreateStopUseCase createStopUseCase(StopRepository stopRepository) {
+        return new CreateStopUseCase(stopRepository);
+    }
+
+    @Bean
+    public UpdateStopUseCase updateStopUseCase(StopRepository stopRepository, GetStopByIdUseCase getStopByIdUseCase) {
+        return new UpdateStopUseCase(stopRepository, getStopByIdUseCase);
+    }
+
+    @Bean
+    public RetrieveAllStopCase retrieveAllStopUseCase(StopRepository stopRepository) {
+        return new RetrieveAllStopCase(stopRepository);
+    }
+
+    @Bean
+    public StopDeleteUseCase stopDeleteUseCase(StopRepository stopRepository) {
+        return new StopDeleteUseCase(stopRepository);
+    }
+
+    @Bean
     public UseCaseExecutor useCaseExecutor() {
         return new SimpleExecutor();
     }
@@ -134,5 +163,10 @@ public class UseCaseImplementer {
     @Bean
     public DeleteImageService deleteImageService(ImageRepository imageRepository) {
         return new DeleteImageService(imageRepository);
+    }
+
+    @Bean
+    public PointCreateUseCase pointCreateUseCase(GeometryFactory geometryFactory) {
+        return new PointCreateUseCase(geometryFactory);
     }
 }

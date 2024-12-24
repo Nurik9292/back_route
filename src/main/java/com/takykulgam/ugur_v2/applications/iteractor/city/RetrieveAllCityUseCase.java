@@ -21,31 +21,40 @@ public class RetrieveAllCityUseCase implements GenericUseCase<Mono<RetrieveAllCi
 
     @Override
     public Output execute(Mono<Input> request) {
-        return new Output(
-                request.flatMap(input -> cityRepository
-                        .findAll()
+        return new Output(request
+                .flatMap(input -> cityRepository
+                    .findAll()
+                    .collectList()
+                    .flatMap(fullList -> Flux
+                        .fromIterable(fullList)
+                        .transform(cities -> PaginationUtils.sort(
+                                cities,
+                                createComparator(input.sort(), input.order()))
+                        )
+                        .transform(cities -> PaginationUtils.paginate(
+                                cities,
+                                input.page(),
+                                input.size())
+                        )
                         .collectList()
-                        .flatMap(fullList -> Flux
-                                .fromIterable(fullList)
-                                .transform(cities -> PaginationUtils.sort(cities, createComparator(
-                                    input.sort(),
-                                    input.order())))
-                                .transform(cities -> PaginationUtils.paginate(cities, input.page(), input.size()))
-                                .collectList()
-                                .map(cityList -> createPage(cityList, fullList.size(),input.page(),input.size())))
+                        .map(cityList -> PaginationUtils.createPage(
+                                cityList,
+                                fullList.size(),
+                                input.page(),
+                                input.size())
+                        )
+                    )
                 )
         );
     }
 
-    private PageResult<OutputCity> createPage(List<OutputCity> cities, int fullListSize, int page, int size) {
-        return new PageResult<>(cities, PaginationUtils.isLastPage(fullListSize, page,size));
-    }
+
 
     private Comparator<OutputCity> createComparator(String sort, String order) {
         Comparator<OutputCity> comparator = switch (sort.toLowerCase()) {
             case "title" -> Comparator.comparing(OutputCity::title, String::compareToIgnoreCase);
             case "id" -> Comparator.comparingLong(OutputCity::id);
-            default -> throw new IllegalArgumentException("Unsupported sort field: " + sort);
+            default -> throw new IllegalArgumentException("Unsupported sort field: %s".formatted(sort));
         };
 
         return "desc".equalsIgnoreCase(order) ? comparator.reversed() : comparator;

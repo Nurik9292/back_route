@@ -1,16 +1,14 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
 
-import com.takykulgam.ugur_v2.applications.iteractor.city.CityDeleteUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.city.CityUpdateUseCase;
+import com.takykulgam.ugur_v2.applications.iteractor.city.*;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import com.takykulgam.ugur_v2.interfaces.dto.city.CreateCity;
 import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
-import com.takykulgam.ugur_v2.applications.iteractor.city.CityCreateUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.city.RetrieveAllCityUseCase;
 import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.interfaces.dto.city.UpdateCity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -22,6 +20,7 @@ public class CityController {
     private final CityCreateUseCase cityCreateUseCase;
     private final CityUpdateUseCase cityUpdateUseCase;
     private final CityDeleteUseCase cityDeleteUseCase;
+    private final FetchAllCityUseCase fetchAllCityUseCase;
 
 
 
@@ -29,14 +28,24 @@ public class CityController {
                           RetrieveAllCityUseCase retrieveAllCityUseCase,
                           CityCreateUseCase cityCreateUseCase,
                           CityUpdateUseCase cityUpdateUseCase,
-                          CityDeleteUseCase cityDeleteUseCase) {
+                          CityDeleteUseCase cityDeleteUseCase,
+                          FetchAllCityUseCase fetchAllCityUseCase) {
         this.useCaseExecutor = useCaseExecutor;
         this.retrieveAllCityUseCase = retrieveAllCityUseCase;
         this.cityCreateUseCase = cityCreateUseCase;
         this.cityUpdateUseCase = cityUpdateUseCase;
         this.cityDeleteUseCase = cityDeleteUseCase;
+        this.fetchAllCityUseCase = fetchAllCityUseCase;
     }
 
+    @GetMapping("/all")
+    public Flux<OutputCity> getAllCity() {
+        return useCaseExecutor.execute(
+                fetchAllCityUseCase,
+                Mono.empty(),
+                FetchAllCityUseCase.Output::result
+        );
+    }
 
     @GetMapping
     public Mono<PageResult<OutputCity>> getAllCities(

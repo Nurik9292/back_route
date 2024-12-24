@@ -1,20 +1,21 @@
 package com.takykulgam.ugur_v2.infrastructure.configuration;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
+import com.takykulgam.ugur_v2.applications.processors.GeoProcessor;
 import com.takykulgam.ugur_v2.core.domain.gateways.*;
 import com.takykulgam.ugur_v2.infrastructure.external.BusAtLogistikRepository;
 import com.takykulgam.ugur_v2.infrastructure.external.BusImdataRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.CityEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcBannerRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcCityRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
+import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStopRepository;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystem;
-import com.takykulgam.ugur_v2.interfaces.gateway.BannerRepositoryImpl;
-import com.takykulgam.ugur_v2.interfaces.gateway.CityRepositoryImpl;
-import com.takykulgam.ugur_v2.interfaces.gateway.ImageRepositoryImpl;
-import com.takykulgam.ugur_v2.interfaces.gateway.StaffRepositoryImpl;
+import com.takykulgam.ugur_v2.interfaces.gateway.*;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,5 +50,13 @@ public class RepositoryImplementer {
     @Bean
     public StaffRepository staffRepository(R2dbcStaffRepository repository, EntityProcessor<StaffEntity> staffEntityProcessor) {
         return new StaffRepositoryImpl(repository, staffEntityProcessor);
+    }
+
+    @Bean
+    public StopRepository stopRepository(R2dbcStopRepository repository,
+                                         EntityProcessor<StopEntity> stopEntityProcessor,
+                                         GeoProcessor<StopEntity> geoProcessor) {
+        return new StopRepositoryImpl(repository, stopEntityProcessor, geoProcessor);
+
     }
 }

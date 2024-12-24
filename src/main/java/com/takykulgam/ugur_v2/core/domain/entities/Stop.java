@@ -48,10 +48,10 @@ public class Stop {
     public record Point(double x, double y) {
 
         public void validation() {
-            if (x > 35.00 && x < 42.00)
+            if (x < 35.00 || x > 42.00)
                 throw new CoreException("Широта должна быть в диапазоне от 35.00 до 42.00");
 
-            if (y > 52.00 && y < 67.00)
+            if (y < 52.00 || y > 67.00)
                 throw new CoreException("Долгота должна быть в диапазоне от 52.00 до 67.00");
         }
 
