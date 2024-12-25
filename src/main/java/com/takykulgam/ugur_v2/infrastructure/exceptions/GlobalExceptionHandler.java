@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.infrastructure.exceptions;
 
-import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
+import com.takykulgam.ugur_v2.domain.exceptions.CoreException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

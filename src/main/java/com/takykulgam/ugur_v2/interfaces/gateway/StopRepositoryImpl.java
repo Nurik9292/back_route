@@ -1,9 +1,9 @@
 package com.takykulgam.ugur_v2.interfaces.gateway;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.processors.GeoProcessor;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputStop;
-import com.takykulgam.ugur_v2.core.domain.gateways.StopRepository;
+import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStop;
+import com.takykulgam.ugur_v2.domain.gateways.StopRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStopRepository;
 import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutputStopMapper;
@@ -16,11 +16,11 @@ public class StopRepositoryImpl implements StopRepository {
 
     private final R2dbcStopRepository stopRepository;
     private final EntityProcessor<StopEntity> processor;
-    private final GeoProcessor<StopEntity> geoProcessor;
+    private final PointProcessor<StopEntity> geoProcessor;
 
     public StopRepositoryImpl(R2dbcStopRepository stopRepository,
                               EntityProcessor<StopEntity> processor,
-                              GeoProcessor<StopEntity> geoProcessor) {
+                              PointProcessor<StopEntity> geoProcessor) {
         this.stopRepository = stopRepository;
         this.processor = processor;
         this.geoProcessor = geoProcessor;

@@ -1,13 +1,14 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
-import com.takykulgam.ugur_v2.applications.iteractor.banner.BannerCreateUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.banner.BannerDeleteUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.banner.RetrieveAllBannerUseCase;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.boundaries.input.InputPaginate;
+import com.takykulgam.ugur_v2.applications.usecase.banner.BannerCreateUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.banner.BannerDeleteUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.banner.RetrieveAllBannerUseCase;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystemStorage;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import com.takykulgam.ugur_v2.interfaces.dto.banner.CreateBanner;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputBanner;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputBanner;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -51,7 +52,7 @@ public class BannerController {
     ) {
         return useCaseExecutor.execute(
                 retrieveAllBannerUseCase,
-                Mono.just(new RetrieveAllBannerUseCase.Input(page, size, sort, order)),
+                Mono.just(new InputPaginate(page, size, sort, order)),
                 RetrieveAllBannerUseCase.Output::result
         );
     }
@@ -69,7 +70,7 @@ public class BannerController {
     public Mono<String>  deleteBanner(@PathVariable("imageName") String imageName) {
         return useCaseExecutor.execute(
                 bannerDeleteUseCase,
-                Mono.just(new BannerDeleteUseCase.Input(imageName)),
+                Mono.just(imageName),
                 BannerDeleteUseCase.Output::message
         );
     }

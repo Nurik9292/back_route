@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2.interfaces.presenters;
 
-import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.usecase.GenericUseCase;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
 
 import java.util.function.Function;
 

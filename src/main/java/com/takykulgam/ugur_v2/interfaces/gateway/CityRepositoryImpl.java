@@ -1,10 +1,10 @@
 package com.takykulgam.ugur_v2.interfaces.gateway;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.core.domain.gateways.CityRepository;
+import com.takykulgam.ugur_v2.domain.gateways.CityRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.CityEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcCityRepository;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputCity;
 import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutputCityMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

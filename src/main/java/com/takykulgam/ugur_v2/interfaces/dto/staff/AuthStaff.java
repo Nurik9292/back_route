@@ -1,9 +1,10 @@
 package com.takykulgam.ugur_v2.interfaces.dto.staff;
 
-import com.takykulgam.ugur_v2.applications.iteractor.staff.AuthStaffLoginCase;
+import com.takykulgam.ugur_v2.applications.boundaries.input.staff.InputAuth;
+import reactor.core.publisher.Mono;
 
 public record AuthStaff(String name, String password) {
-    public AuthStaffLoginCase.Input toInput() {
-        return new AuthStaffLoginCase.Input(name, password);
+    public Mono<InputAuth> toInput() {
+        return Mono.just(new InputAuth(name, password));
     }
 }

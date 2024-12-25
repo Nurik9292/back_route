@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.interfaces.mappers;
 
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputStop;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStop;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
 
 public class EntityOutputStopMapper {

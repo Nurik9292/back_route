@@ -1,19 +1,19 @@
 package com.takykulgam.ugur_v2.infrastructure.configuration;
 
-import com.takykulgam.ugur_v2.applications.iteractor.banner.BannerCreateUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.banner.BannerDeleteUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.banner.GetBannerByIdUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.banner.RetrieveAllBannerUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.city.*;
-import com.takykulgam.ugur_v2.applications.iteractor.geo.PointCreateUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.image.DeleteImageService;
-import com.takykulgam.ugur_v2.applications.iteractor.stop.*;
-import com.takykulgam.ugur_v2.core.domain.gateways.*;
-import com.takykulgam.ugur_v2.applications.iteractor.image.SaveImageService;
-import com.takykulgam.ugur_v2.applications.iteractor.staff.*;
+import com.takykulgam.ugur_v2.applications.usecase.banner.BannerCreateUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.banner.BannerDeleteUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.banner.BannerGetByIdUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.banner.RetrieveAllBannerUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.city.*;
+import com.takykulgam.ugur_v2.applications.usecase.geo.PointCreateUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.image.DeleteImageService;
+import com.takykulgam.ugur_v2.applications.usecase.stop.*;
+import com.takykulgam.ugur_v2.applications.usecase.image.SaveImageService;
+import com.takykulgam.ugur_v2.applications.usecase.staff.*;
 import com.takykulgam.ugur_v2.applications.security.CustomAuthentication;
 import com.takykulgam.ugur_v2.applications.security.CustomerPasswordEncoder;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.domain.gateways.*;
 import com.takykulgam.ugur_v2.interfaces.presenters.SimpleExecutor;
 
 import org.locationtech.jts.geom.GeometryFactory;
@@ -25,7 +25,7 @@ public class UseCaseImplementer {
 
     @Bean
     public AuthStaffLoginCase authStaffLoginCase(
-            GetStaffByNameUseCase getUserByNameUseCase,
+            StaffGetByNameUseCase getUserByNameUseCase,
             CustomerPasswordEncoder customerPasswordEncoder,
             CustomAuthentication customAuthentication) {
         return new AuthStaffLoginCase(getUserByNameUseCase, customerPasswordEncoder, customAuthentication);
@@ -37,13 +37,13 @@ public class UseCaseImplementer {
     }
 
     @Bean
-    public GetStaffByIdUseCase getStaffByIdUseCase(StaffRepository staffRepository) {
-        return new GetStaffByIdUseCase(staffRepository);
+    public StaffGetByIdUseCase getStaffByIdUseCase(StaffRepository staffRepository) {
+        return new StaffGetByIdUseCase(staffRepository);
     }
 
     @Bean
-    public GetStaffByNameUseCase getUserByNameUseCase(StaffRepository staffRepository) {
-        return new GetStaffByNameUseCase(staffRepository);
+    public StaffGetByNameUseCase getUserByNameUseCase(StaffRepository staffRepository) {
+        return new StaffGetByNameUseCase(staffRepository);
     }
 
     @Bean
@@ -66,13 +66,13 @@ public class UseCaseImplementer {
     @Bean
     public StaffDeleteCase staffDeleteCase(StaffRepository staffRepository,
                                            DeleteImageService deleteImageService,
-                                           GetStaffByIdUseCase getStaffByIdUseCase) {
+                                           StaffGetByIdUseCase getStaffByIdUseCase) {
         return new StaffDeleteCase(staffRepository, deleteImageService, getStaffByIdUseCase);
     }
 
     @Bean
-    public ExistStaffUseCase existStaffUseCase(StaffRepository staffRepository) {
-        return new ExistStaffUseCase(staffRepository);
+    public StaffExistUseCase existStaffUseCase(StaffRepository staffRepository) {
+        return new StaffExistUseCase(staffRepository);
     }
 
     @Bean
@@ -96,12 +96,12 @@ public class UseCaseImplementer {
     }
 
     @Bean
-    public CityUpdateUseCase cityUpdateUseCase(CityRepository cityRepository, GetCityByIdUseCase getCityByIdUseCase) {
+    public CityUpdateUseCase cityUpdateUseCase(CityRepository cityRepository, CityGetByIdUseCase getCityByIdUseCase) {
         return new CityUpdateUseCase(cityRepository, getCityByIdUseCase);
     }
     @Bean
-    public GetCityByIdUseCase getCityByIdUseCase(CityRepository cityRepository) {
-        return new GetCityByIdUseCase(cityRepository);
+    public CityGetByIdUseCase getCityByIdUseCase(CityRepository cityRepository) {
+        return new CityGetByIdUseCase(cityRepository);
     }
 
     @Bean
@@ -126,23 +126,23 @@ public class UseCaseImplementer {
     }
 
     @Bean
-    public GetBannerByIdUseCase getBannerByIdUseCase(BannerRepository bannerRepository) {
-        return new GetBannerByIdUseCase(bannerRepository);
+    public BannerGetByIdUseCase getBannerByIdUseCase(BannerRepository bannerRepository) {
+        return new BannerGetByIdUseCase(bannerRepository);
     }
 
     @Bean
-    public GetStopByIdUseCase getStopByIdUseCase(StopRepository stopRepository) {
-        return new GetStopByIdUseCase(stopRepository);
+    public StopGetByIdUseCase getStopByIdUseCase(StopRepository stopRepository) {
+        return new StopGetByIdUseCase(stopRepository);
     }
 
     @Bean
-    public CreateStopUseCase createStopUseCase(StopRepository stopRepository) {
-        return new CreateStopUseCase(stopRepository);
+    public StopCreateUseCase createStopUseCase(StopRepository stopRepository) {
+        return new StopCreateUseCase(stopRepository);
     }
 
     @Bean
-    public UpdateStopUseCase updateStopUseCase(StopRepository stopRepository, GetStopByIdUseCase getStopByIdUseCase) {
-        return new UpdateStopUseCase(stopRepository, getStopByIdUseCase);
+    public StopUpdateUseCase updateStopUseCase(StopRepository stopRepository, StopGetByIdUseCase getStopByIdUseCase) {
+        return new StopUpdateUseCase(stopRepository, getStopByIdUseCase);
     }
 
     @Bean

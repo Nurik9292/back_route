@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.utils;
 
-import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
+import com.takykulgam.ugur_v2.domain.exceptions.CoreException;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;

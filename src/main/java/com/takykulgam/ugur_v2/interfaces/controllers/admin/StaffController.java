@@ -2,10 +2,10 @@ package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
 import com.takykulgam.ugur_v2.interfaces.dto.staff.CreateStaff;
 import com.takykulgam.ugur_v2.interfaces.dto.staff.MeStaff;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputStaff;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStaff;
 import com.takykulgam.ugur_v2.interfaces.dto.staff.UpdateStaff;
-import com.takykulgam.ugur_v2.applications.iteractor.staff.*;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.usecase.staff.*;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystemStorage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class StaffController {
         System.out.println(createStaff);
         return useCaseExecutor.execute(
                 staffCreateCase,
-                Mono.just(createStaff).map(CreateStaff::toInput),
+                createStaff.toInput(),
                 StaffCreateCase.Output::result);
     }
 
@@ -70,7 +70,7 @@ public class StaffController {
     public Mono<OutputStaff> updateStaff(@PathVariable Long id, @RequestBody UpdateStaff updateStaff) {
         return useCaseExecutor.execute(
                 staffUpdateCase,
-                Mono.just(updateStaff).map(staff -> staff.toInput(id)),
+                updateStaff.toInput(id),
                 StaffUpdateCase.Output::result);
     }
 
@@ -87,7 +87,7 @@ public class StaffController {
     public Mono<OutputStaff> updateMe(@RequestBody MeStaff meStaff) {
         return useCaseExecutor.execute(
                 staffMeUseCase,
-                Mono.just(meStaff).map(MeStaff::toInput),
+                meStaff.toInput(),
                 StaffMeUseCase.Output::result
                 );
     }

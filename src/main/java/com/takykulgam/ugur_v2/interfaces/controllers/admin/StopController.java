@@ -1,14 +1,15 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
-import com.takykulgam.ugur_v2.applications.iteractor.stop.CreateStopUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.stop.RetrieveAllStopCase;
-import com.takykulgam.ugur_v2.applications.iteractor.stop.StopDeleteUseCase;
-import com.takykulgam.ugur_v2.applications.iteractor.stop.UpdateStopUseCase;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputStop;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.boundaries.input.InputPaginate;
+import com.takykulgam.ugur_v2.applications.usecase.stop.StopCreateUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.stop.RetrieveAllStopCase;
+import com.takykulgam.ugur_v2.applications.usecase.stop.StopDeleteUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.stop.StopUpdateUseCase;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStop;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
-import com.takykulgam.ugur_v2.interfaces.dto.stop.CreateStop;
-import com.takykulgam.ugur_v2.interfaces.dto.stop.UpdateStop;
+import com.takykulgam.ugur_v2.interfaces.dto.stop.StopCreate;
+import com.takykulgam.ugur_v2.interfaces.dto.stop.StopUpdate;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -16,15 +17,15 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/admin/stops")
 public class StopController {
 
-    private final CreateStopUseCase createStopUseCase;
+    private final StopCreateUseCase createStopUseCase;
     private final RetrieveAllStopCase retrieveAllStopCase;
-    private final UpdateStopUseCase updateStopUseCase;
+    private final StopUpdateUseCase updateStopUseCase;
     private final StopDeleteUseCase stopDeleteUseCase;
     private final UseCaseExecutor useCaseExecutor;
 
-    public StopController(CreateStopUseCase createStopUseCase,
+    public StopController(StopCreateUseCase createStopUseCase,
                           RetrieveAllStopCase retrieveAllStopCase,
-                          UpdateStopUseCase updateStopUseCase,
+                          StopUpdateUseCase updateStopUseCase,
                           StopDeleteUseCase stopDeleteUseCase,
                           UseCaseExecutor useCaseExecutor) {
         this.createStopUseCase = createStopUseCase;
@@ -42,26 +43,26 @@ public class StopController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
         return useCaseExecutor.execute(
                 retrieveAllStopCase,
-                Mono.just(new RetrieveAllStopCase.Input(page, size, sort, order)),
+                Mono.just(new InputPaginate(page, size, sort, order)),
                 RetrieveAllStopCase.Output::result
         );
     }
 
     @PostMapping
-    public Mono<OutputStop> addStop(@RequestBody CreateStop createStop) {
+    public Mono<OutputStop> addStop(@RequestBody StopCreate createStop) {
         return useCaseExecutor.execute(
                 createStopUseCase,
-                Mono.just(createStop.toInput()),
-                CreateStopUseCase.Output::result
+                createStop.toInput(),
+                StopCreateUseCase.Output::result
         );
     }
 
     @PatchMapping("/{id}")
-    public Mono<OutputStop> updateStop(@PathVariable Long id, @RequestBody UpdateStop updatedStop) {
+    public Mono<OutputStop> updateStop(@PathVariable Long id, @RequestBody StopUpdate updatedStop) {
         return useCaseExecutor.execute(
                 updateStopUseCase,
-                Mono.just(updatedStop.toInput(id)),
-                UpdateStopUseCase.Output::result
+                updatedStop.toInput(id),
+                StopUpdateUseCase.Output::result
         );
     }
 

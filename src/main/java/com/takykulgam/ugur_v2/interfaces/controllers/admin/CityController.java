@@ -1,11 +1,12 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
 
-import com.takykulgam.ugur_v2.applications.iteractor.city.*;
+import com.takykulgam.ugur_v2.applications.boundaries.input.InputPaginate;
+import com.takykulgam.ugur_v2.applications.usecase.city.*;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import com.takykulgam.ugur_v2.interfaces.dto.city.CreateCity;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputCity;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputCity;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
 import com.takykulgam.ugur_v2.interfaces.dto.city.UpdateCity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -57,7 +58,7 @@ public class CityController {
 
         return useCaseExecutor.execute(
                 retrieveAllCityUseCase,
-                Mono.just(new RetrieveAllCityUseCase.Input(page, size, sort, order)),
+                Mono.just(new InputPaginate(page, size, sort, order)),
                 RetrieveAllCityUseCase.Output::result
         );
     }
@@ -66,7 +67,7 @@ public class CityController {
     public Mono<OutputCity> addCity(@RequestBody CreateCity inputCity) {
         return useCaseExecutor.execute(
                 cityCreateUseCase,
-                Mono.just(new CityCreateUseCase.Input(inputCity.title())),
+                inputCity.toInput(),
                 CityCreateUseCase.Output::result
         );
     }
@@ -75,7 +76,7 @@ public class CityController {
     public Mono<OutputCity> updateCity(@RequestBody UpdateCity updateCity, @PathVariable long id) {
         return useCaseExecutor.execute(
                 cityUpdateUseCase,
-                Mono.just(updateCity).map(city -> city.toInput(id)),
+                updateCity.toInput(id),
                 CityUpdateUseCase.Output::result
         );
     }
@@ -84,7 +85,7 @@ public class CityController {
     public Mono<String> deleteCity(@PathVariable long id) {
         return useCaseExecutor.execute(
                 cityDeleteUseCase,
-                Mono.just(new CityDeleteUseCase.Input(id)),
+                Mono.just(id),
                 CityDeleteUseCase.Output::message
         );
     }

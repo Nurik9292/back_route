@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.interfaces.gateway;
 
-import com.takykulgam.ugur_v2.core.domain.gateways.ImageRepository;
+import com.takykulgam.ugur_v2.domain.gateways.ImageRepository;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystem;
 import com.takykulgam.ugur_v2.utils.ImageUtils;
 import org.springframework.http.codec.multipart.FilePart;

@@ -1,12 +1,12 @@
 package com.takykulgam.ugur_v2.interfaces.gateway;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.core.domain.exceptions.CoreException;
-import com.takykulgam.ugur_v2.core.domain.gateways.StaffRepository;
+import com.takykulgam.ugur_v2.domain.exceptions.CoreException;
+import com.takykulgam.ugur_v2.domain.gateways.StaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.admin.StaffDetails;
-import com.takykulgam.ugur_v2.core.boundaries.output.OutputStaff;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStaff;
 import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutPutStaffMapper;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;

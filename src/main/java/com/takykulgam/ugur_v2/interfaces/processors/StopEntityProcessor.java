@@ -1,14 +1,14 @@
 package com.takykulgam.ugur_v2.interfaces.processors;
 
-import com.takykulgam.ugur_v2.applications.iteractor.geo.PointCreateUseCase;
+import com.takykulgam.ugur_v2.applications.usecase.geo.PointCreateUseCase;
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.processors.GeoProcessor;
+import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-public class StopEntityProcessor implements EntityProcessor<StopEntity>, GeoProcessor<StopEntity> {
+public class StopEntityProcessor implements EntityProcessor<StopEntity>, PointProcessor<StopEntity> {
 
     private final PointCreateUseCase pointCreateUseCase;
 

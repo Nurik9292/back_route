@@ -1,8 +1,8 @@
 package com.takykulgam.ugur_v2.infrastructure.configuration;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.processors.GeoProcessor;
-import com.takykulgam.ugur_v2.core.domain.gateways.*;
+import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
+import com.takykulgam.ugur_v2.domain.gateways.*;
 import com.takykulgam.ugur_v2.infrastructure.external.BusAtLogistikRepository;
 import com.takykulgam.ugur_v2.infrastructure.external.BusImdataRepository;
 import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
@@ -15,7 +15,6 @@ import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaff
 import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStopRepository;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystem;
 import com.takykulgam.ugur_v2.interfaces.gateway.*;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -55,7 +54,7 @@ public class RepositoryImplementer {
     @Bean
     public StopRepository stopRepository(R2dbcStopRepository repository,
                                          EntityProcessor<StopEntity> stopEntityProcessor,
-                                         GeoProcessor<StopEntity> geoProcessor) {
+                                         PointProcessor<StopEntity> geoProcessor) {
         return new StopRepositoryImpl(repository, stopEntityProcessor, geoProcessor);
 
     }

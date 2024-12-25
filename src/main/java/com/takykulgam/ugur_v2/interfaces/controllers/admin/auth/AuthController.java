@@ -1,9 +1,8 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin.auth;
 
-import com.takykulgam.ugur_v2.applications.iteractor.staff.AuthStaffLoginCase;
+import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.usecase.staff.AuthStaffLoginCase;
 import com.takykulgam.ugur_v2.interfaces.dto.staff.AuthStaff;
-import com.takykulgam.ugur_v2.core.boundaries.input.GenericUseCase;
-import com.takykulgam.ugur_v2.core.boundaries.output.UseCaseExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -13,11 +12,11 @@ import reactor.core.publisher.Mono;
 @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
-    private final GenericUseCase<Mono<AuthStaffLoginCase.Input>, AuthStaffLoginCase.Output> authStaffLoginCase;
+    private final AuthStaffLoginCase authStaffLoginCase;
     private final UseCaseExecutor executor;
 
     @Autowired
-    public AuthController(GenericUseCase<Mono<AuthStaffLoginCase.Input>, AuthStaffLoginCase.Output> authStaffLoginCase, UseCaseExecutor executor) {
+    public AuthController(AuthStaffLoginCase authStaffLoginCase, UseCaseExecutor executor) {
         this.authStaffLoginCase = authStaffLoginCase;
         this.executor = executor;
     }
@@ -26,7 +25,7 @@ public class AuthController {
     public Mono<String> login(@RequestBody AuthStaff authStaff) {
         return executor.execute(
                 authStaffLoginCase,
-                Mono.just(authStaff).map(AuthStaff::toInput),
+                authStaff.toInput(),
                 AuthStaffLoginCase.Output::accessToken);
     }
 }
