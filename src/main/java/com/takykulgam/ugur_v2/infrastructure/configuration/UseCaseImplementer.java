@@ -7,6 +7,7 @@ import com.takykulgam.ugur_v2.applications.usecase.banner.RetrieveAllBannerUseCa
 import com.takykulgam.ugur_v2.applications.usecase.city.*;
 import com.takykulgam.ugur_v2.applications.usecase.geo.PointCreateUseCase;
 import com.takykulgam.ugur_v2.applications.usecase.image.DeleteImageService;
+import com.takykulgam.ugur_v2.applications.usecase.route.RouteCreateUseCase;
 import com.takykulgam.ugur_v2.applications.usecase.stop.*;
 import com.takykulgam.ugur_v2.applications.usecase.image.SaveImageService;
 import com.takykulgam.ugur_v2.applications.usecase.staff.*;
@@ -156,6 +157,11 @@ public class UseCaseImplementer {
     }
 
     @Bean
+    public FetchAllStopUseCase fetchAllStopUseCase(StopRepository stopRepository) {
+        return new FetchAllStopUseCase(stopRepository);
+    }
+
+    @Bean
     public UseCaseExecutor useCaseExecutor() {
         return new SimpleExecutor();
     }
@@ -168,5 +174,11 @@ public class UseCaseImplementer {
     @Bean
     public PointCreateUseCase pointCreateUseCase(GeometryFactory geometryFactory) {
         return new PointCreateUseCase(geometryFactory);
+    }
+
+    @Bean
+    public RouteCreateUseCase routeCreateUseCase(RouteRepository routeRepository,
+                                                 RouteDirectionRepository routeDirectionRepository) {
+        return new RouteCreateUseCase(routeRepository, routeDirectionRepository);
     }
 }

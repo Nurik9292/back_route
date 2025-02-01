@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.StaffEntity;
 import com.takykulgam.ugur_v2.infrastructure.security.admin.StaffDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;

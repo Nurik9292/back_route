@@ -2,10 +2,10 @@ package com.takykulgam.ugur_v2.interfaces.gateway;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
 import com.takykulgam.ugur_v2.domain.gateways.BannerRepository;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcBannerRepository;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.BannerEntity;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.repositories.R2dbcBannerRepository;
 import com.takykulgam.ugur_v2.applications.boundaries.output.OutputBanner;
-import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutputBannerMapper;
+import com.takykulgam.ugur_v2.interfaces.mappers.entityOutput.EntityOutputBannerMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,20 +13,24 @@ public class BannerRepositoryImpl implements BannerRepository {
 
     private final R2dbcBannerRepository repository;
     private final EntityProcessor<BannerEntity> bannerEntityProcessor;
+    private final EntityOutputBannerMapper outputBannerMapper;
 
-    public BannerRepositoryImpl(R2dbcBannerRepository repository, EntityProcessor<BannerEntity> bannerEntityProcessor) {
+    public BannerRepositoryImpl(R2dbcBannerRepository repository,
+                                EntityProcessor<BannerEntity> bannerEntityProcessor,
+                                EntityOutputBannerMapper outputBannerMapper) {
         this.repository = repository;
         this.bannerEntityProcessor = bannerEntityProcessor;
+        this.outputBannerMapper = outputBannerMapper;
     }
 
     @Override
     public Flux<OutputBanner> findAll() {
-        return repository.findAll().map(EntityOutputBannerMapper::toDto);
+        return repository.findAll().map(outputBannerMapper::toDto);
     }
 
     @Override
     public Mono<OutputBanner> findById(long id) {
-        return repository.findById(id).map(EntityOutputBannerMapper::toDto);
+        return repository.findById(id).map(outputBannerMapper::toDto);
     }
 
     @Override
@@ -35,7 +39,7 @@ public class BannerRepositoryImpl implements BannerRepository {
                 .just(new BannerEntity(banner))
                 .doOnNext(bannerEntityProcessor::preprocessBeforeSave)
                 .flatMap(repository::save)
-                .map(EntityOutputBannerMapper::toDto);
+                .map(outputBannerMapper::toDto);
     }
 
     @Override

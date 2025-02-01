@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2.interfaces.processors;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.BannerEntity;
 
 import java.time.LocalDateTime;
 

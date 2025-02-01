@@ -1,13 +1,11 @@
 package com.takykulgam.ugur_v2.interfaces.processors;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.RouteEntity;
-import reactor.core.publisher.Mono;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.RouteEntity;
 
 import java.time.LocalDateTime;
 
-public class RouteEntityProcessor implements EntityProcessor<RouteEntity>, PointProcessor<RouteEntity> {
+public class RouteEntityProcessor implements EntityProcessor<RouteEntity> {
 
     @Override
     public void preprocessBeforeSave(RouteEntity entity) {
@@ -20,13 +18,4 @@ public class RouteEntityProcessor implements EntityProcessor<RouteEntity>, Point
         entity.setUpdatedAt(LocalDateTime.now());
     }
 
-    @Override
-    public Mono<Void> preprocessGeoBeforeSave(RouteEntity entity, double x, double y) {
-        return null;
-    }
-
-    @Override
-    public Mono<Void> preprocessGeoBeforeUpdate(RouteEntity entity, double x, double y) {
-        return null;
-    }
 }

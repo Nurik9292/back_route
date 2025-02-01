@@ -1,7 +1,7 @@
 package com.takykulgam.ugur_v2.infrastructure.security.admin;
 
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.StaffEntity;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.repositories.R2dbcStaffRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;

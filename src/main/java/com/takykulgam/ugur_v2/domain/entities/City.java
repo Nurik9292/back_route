@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.Objects;
 
 @Getter
-public class City {
+public class City implements Domain {
 
     private long id;
     private String title;

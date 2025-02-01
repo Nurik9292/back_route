@@ -10,11 +10,11 @@ import java.util.Base64;
 import java.util.Objects;
 
 @Getter
-public class Staff {
+public class Staff implements Domain {
 
     private long id;
     private final String name;
-    private final boolean isAdmin;
+    private boolean isAdmin;
     private final Password password;
     private String avatar;
 
@@ -38,6 +38,12 @@ public class Staff {
         this.id = id;
         this.name = name;
         this.isAdmin = isAdmin;
+        this.password = new Password(rawPassword);
+    }
+
+    public Staff(String name, String rawPassword, String avatar) {
+        this.name = name;
+        this.avatar = avatar;
         this.password = new Password(rawPassword);
     }
 

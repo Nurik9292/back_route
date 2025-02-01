@@ -1,20 +1,18 @@
 package com.takykulgam.ugur_v2.infrastructure.configuration;
 
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
 import com.takykulgam.ugur_v2.domain.gateways.*;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.*;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.repositories.*;
 import com.takykulgam.ugur_v2.infrastructure.external.BusAtLogistikRepository;
 import com.takykulgam.ugur_v2.infrastructure.external.BusImdataRepository;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.CityEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcBannerRepository;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcCityRepository;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffRepository;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStopRepository;
 import com.takykulgam.ugur_v2.infrastructure.storage.FileSystem;
 import com.takykulgam.ugur_v2.interfaces.gateway.*;
+import com.takykulgam.ugur_v2.interfaces.mappers.domainEntity.DomainEntityRouteDirectionMapper;
+import com.takykulgam.ugur_v2.interfaces.mappers.domainEntity.DomainEntityRouteMapper;
+import com.takykulgam.ugur_v2.interfaces.mappers.domainEntity.DomainEntityStaffMapper;
+import com.takykulgam.ugur_v2.interfaces.mappers.domainEntity.DomainEntityStopMapper;
+import com.takykulgam.ugur_v2.interfaces.mappers.entityOutput.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,8 +30,10 @@ public class RepositoryImplementer {
     }
 
     @Bean
-    public BannerRepository bannerRepository(R2dbcBannerRepository repository, EntityProcessor<BannerEntity> bannerEntityProcessor) {
-        return new BannerRepositoryImpl(repository, bannerEntityProcessor);
+    public BannerRepository bannerRepository(R2dbcBannerRepository repository,
+                                             EntityProcessor<BannerEntity> bannerEntityProcessor,
+                                             EntityOutputBannerMapper bannerEntityOutputMapper) {
+        return new BannerRepositoryImpl(repository, bannerEntityProcessor, bannerEntityOutputMapper);
     }
 
     @Bean
@@ -42,20 +42,42 @@ public class RepositoryImplementer {
     }
 
     @Bean
-    public CityRepository cityRepository(R2dbcCityRepository repository, EntityProcessor<CityEntity> cityEntityProcessor) {
-        return new CityRepositoryImpl(repository, cityEntityProcessor);
+    public CityRepository cityRepository(R2dbcCityRepository repository,
+                                         EntityProcessor<CityEntity> cityEntityProcessor,
+                                         EntityOutputCityMapper cityEntityOutputMapper) {
+        return new CityRepositoryImpl(repository, cityEntityProcessor, cityEntityOutputMapper);
     }
 
     @Bean
-    public StaffRepository staffRepository(R2dbcStaffRepository repository, EntityProcessor<StaffEntity> staffEntityProcessor) {
-        return new StaffRepositoryImpl(repository, staffEntityProcessor);
+    public StaffRepository staffRepository(R2dbcStaffRepository repository,
+                                           EntityProcessor<StaffEntity> staffEntityProcessor,
+                                           EntityOutputStaffMapper staffEntityOutputMapper,
+                                           DomainEntityStaffMapper domainEntityStaffMapper) {
+        return new StaffRepositoryImpl(repository, staffEntityProcessor, staffEntityOutputMapper, domainEntityStaffMapper);
     }
 
     @Bean
     public StopRepository stopRepository(R2dbcStopRepository repository,
                                          EntityProcessor<StopEntity> stopEntityProcessor,
-                                         PointProcessor<StopEntity> geoProcessor) {
-        return new StopRepositoryImpl(repository, stopEntityProcessor, geoProcessor);
+                                         DomainEntityStopMapper domainEntityStopMapper,
+                                         EntityOutputStopMapper stopEntityOutputMapper) {
+        return new StopRepositoryImpl(repository, stopEntityProcessor, domainEntityStopMapper, stopEntityOutputMapper);
 
+    }
+
+    @Bean
+    public RouteRepository routeRepository(R2dbcRouteRepository routeRepository,
+                                           DomainEntityRouteMapper domainEntityRouteMapper,
+                                           EntityProcessor<RouteEntity> routeEntityProcessor,
+                                           EntityOutputRouteMapper routeEntityOutputMapper) {
+        return new RouteRepositoryImpl(routeRepository, domainEntityRouteMapper, routeEntityProcessor, routeEntityOutputMapper);
+    }
+
+    @Bean
+    public RouteDirectionRepository routeDirectionRepository(R2dbcRouteDirectionRepository routeDirectionRepository,
+                                                             EntityProcessor<RouteDirectionEntity> entityEntityProcessor,
+                                                             DomainEntityRouteDirectionMapper domainMapper,
+                                                             EntityOutputRouteDirMapper entityOutputMapper) {
+        return new RouteDirectionRepositoryImpl(routeDirectionRepository, entityEntityProcessor, domainMapper, entityOutputMapper);
     }
 }

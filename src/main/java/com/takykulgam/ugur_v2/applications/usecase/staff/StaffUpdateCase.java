@@ -35,7 +35,7 @@ public class StaffUpdateCase implements GenericUseCase<Mono<InputStaffUpdate>, S
     }
 
     private Mono<OutputStaff> updateStaff(Staff staff) {
-        return staffRepository.update(staff.getId(), staff.getName(), staff.getPassword().value(), staff.isAdmin());
+        return staffRepository.update(staff.getId(), staff);
     }
 
 

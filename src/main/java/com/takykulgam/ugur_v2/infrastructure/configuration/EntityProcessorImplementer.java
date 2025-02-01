@@ -3,14 +3,8 @@ package com.takykulgam.ugur_v2.infrastructure.configuration;
 import com.takykulgam.ugur_v2.applications.usecase.geo.PointCreateUseCase;
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
 import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.BannerEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.CityEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
-import com.takykulgam.ugur_v2.interfaces.processors.BannerEntityProcessor;
-import com.takykulgam.ugur_v2.interfaces.processors.CityEntityProcessor;
-import com.takykulgam.ugur_v2.interfaces.processors.StaffEntityProcessor;
-import com.takykulgam.ugur_v2.interfaces.processors.StopEntityProcessor;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.*;
+import com.takykulgam.ugur_v2.interfaces.processors.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +36,16 @@ public class EntityProcessorImplementer {
     @Bean
     public PointProcessor<StopEntity> stopEntityGeoProcessor(PointCreateUseCase pointCreateUseCase) {
         return new StopEntityProcessor(pointCreateUseCase);
+    }
+
+    @Bean
+    public EntityProcessor<RouteEntity> routeEntityProcessor() {
+        return new RouteEntityProcessor();
+    }
+
+    @Bean
+    public EntityProcessor<RouteDirectionEntity> routeDirectionEntityProcessor() {
+        return new RouteDirectionEntityProcessor();
     }
 }
 

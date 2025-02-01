@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.infrastructure.security.admin;
 
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StaffEntity;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.StaffEntity;
 import com.takykulgam.ugur_v2.infrastructure.security.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

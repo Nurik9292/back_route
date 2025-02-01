@@ -25,24 +25,13 @@ public class StopCreateUseCase implements GenericUseCase<Mono<InputStopCreate>, 
                         .doOnNext(Stop::validateTitle)
                         .doOnNext(Stop::validateLocation)
                         .doOnNext(Stop::validateCity)
-                        .flatMap(this::saveStop)
+                        .flatMap(stopRepository::save)
                         .doOnSuccess(e -> log.info("Stop successfully saved: {}", e))
                         .doOnError(e -> log.error("Error saving stop: ", e))
                         .onErrorResume(e ->  Mono.error(new CoreException("Ошибка сохранения остановки: %s".formatted(e.getMessage()))))
                 )
         );
     }
-
-    private Mono<OutputStop> saveStop(Stop stop) {
-        return stopRepository.save(
-                stop.getTitle(),
-                stop.getLocation().x(),
-                stop.getLocation().y(),
-                stop.getCityId()
-        );
-    }
-
-
 
     public record Output(Mono<OutputStop> result) {}
 }

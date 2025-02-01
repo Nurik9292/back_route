@@ -43,8 +43,8 @@ public class StaffMeUseCase implements GenericUseCase<Mono<InputMe>, StaffMeUseC
                 .doOnNext(this::validateStaff)
                 .flatMap(staff -> {
                     if (isAvatarValid(staff.getAvatar()))
-                        return saveImage(staff).flatMap(imagePath -> updateStaff(input, imagePath));
-                    else return updateStaff(input, null);
+                        return saveImage(staff).flatMap(imagePath -> updateStaff(staff, imagePath));
+                    else return updateStaff(staff, null);
                 });
     }
 
@@ -69,8 +69,8 @@ public class StaffMeUseCase implements GenericUseCase<Mono<InputMe>, StaffMeUseC
                 .path();
     }
 
-    private Mono<OutputStaff> updateStaff(InputMe input, String avatarPath) {
-        return staffRepository.updateMe(input.name(), avatarPath, input.password());
+    private Mono<OutputStaff> updateStaff(Staff input, String avatarPath) {
+        return staffRepository.updateMe(input, avatarPath);
     }
 
 

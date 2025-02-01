@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.Objects;
 
 @Getter
-public class Stop {
+public class Stop implements Domain{
 
     private long id;
     private final String title;
@@ -42,7 +42,7 @@ public class Stop {
     }
 
     public void validateCity() {
-        if (cityId != 0)
+        if (cityId <= 0)
             throw new CoreException("Остановка должна быть привязана к городу.");
     }
 

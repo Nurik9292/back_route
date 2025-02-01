@@ -1,12 +1,14 @@
 package com.takykulgam.ugur_v2.interfaces.gateway;
 
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStopForRoute;
 import com.takykulgam.ugur_v2.applications.processors.EntityProcessor;
-import com.takykulgam.ugur_v2.applications.processors.PointProcessor;
 import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStop;
+import com.takykulgam.ugur_v2.domain.entities.Domain;
 import com.takykulgam.ugur_v2.domain.gateways.StopRepository;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.entities.StopEntity;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStopRepository;
-import com.takykulgam.ugur_v2.interfaces.mappers.EntityOutputStopMapper;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.entities.StopEntity;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.repositories.R2dbcStopRepository;
+import com.takykulgam.ugur_v2.interfaces.mappers.domainEntity.DomainEntityStopMapper;
+import com.takykulgam.ugur_v2.interfaces.mappers.entityOutput.EntityOutputStopMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,44 +18,44 @@ public class StopRepositoryImpl implements StopRepository {
 
     private final R2dbcStopRepository stopRepository;
     private final EntityProcessor<StopEntity> processor;
-    private final PointProcessor<StopEntity> geoProcessor;
+    private final DomainEntityStopMapper domainEntityStopMapper;
+    private final EntityOutputStopMapper entityOutputStopMapper;
 
     public StopRepositoryImpl(R2dbcStopRepository stopRepository,
                               EntityProcessor<StopEntity> processor,
-                              PointProcessor<StopEntity> geoProcessor) {
+                              DomainEntityStopMapper domainEntityStopMapper,
+                              EntityOutputStopMapper entityOutputStopMapper) {
         this.stopRepository = stopRepository;
         this.processor = processor;
-        this.geoProcessor = geoProcessor;
+        this.domainEntityStopMapper = domainEntityStopMapper;
+        this.entityOutputStopMapper = entityOutputStopMapper;
     }
 
     @Override
     public Mono<OutputStop> findById(long id) {
-        return stopRepository.findById(id).map(EntityOutputStopMapper::toDto);
+        return stopRepository.findById(id).map(entityOutputStopMapper::toDto);
     }
 
     @Override
-    public Mono<OutputStop> save(final String title, final double x, final double y, final long cityId) {
-        return Mono.just(new StopEntity(title, cityId))
+    public Mono<OutputStop> save(Domain domain) {
+        return Mono.just(domainEntityStopMapper.toEntity(domain))
                 .doOnNext(processor::preprocessBeforeSave)
-                .flatMap(stop -> geoProcessor.preprocessGeoBeforeSave(stop, x, y).thenReturn(stop))
                 .flatMap(stopRepository::save)
-                .map(EntityOutputStopMapper::toDto);
+                .map(entityOutputStopMapper::toDto);
     }
 
     @Override
-    public Mono<OutputStop> update(long id, String name, double x, double y, long cityId) {
-        System.out.println(id);
-        System.out.println(name);
+    public Mono<OutputStop> update(long id, Domain domain) {
         return stopRepository.findById(id)
                 .map(entity -> {
-                    entity.setName(Objects.isNull(name) ? entity.getName() : name);
-                    entity.setCityId(cityId);
+                    StopEntity stop = domainEntityStopMapper.toEntity(domain);
+                    entity.setName(Objects.isNull(stop.getName()) ? entity.getName() : stop.getName());
+                    entity.setCityId(stop.getCityId());
                     return entity;
                 })
                 .doOnNext(processor::preprocessBeforeUpdate)
-                .flatMap(stop -> geoProcessor.preprocessGeoBeforeUpdate(stop, x, y).thenReturn(stop))
                 .flatMap(stopRepository::save)
-                .map(EntityOutputStopMapper::toDto);
+                .map(entityOutputStopMapper::toDto);
     }
 
     @Override
@@ -63,7 +65,12 @@ public class StopRepositoryImpl implements StopRepository {
 
     @Override
     public Flux<OutputStop> findAll() {
-        return stopRepository.findAll().map(EntityOutputStopMapper::toDto);
+        return stopRepository.findAll().map(entityOutputStopMapper::toDto);
+    }
+
+    @Override
+    public Flux<OutputStopForRoute> fetchAll() {
+        return stopRepository.findAll().map(entityOutputStopMapper::toDtoRoute);
     }
 
     @Override

@@ -28,6 +28,9 @@
             <column name="interval" type="integer">
                 <constraints nullable="true"/>
             </column>
+            <column name="city_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -35,6 +38,13 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="routes"
+                baseColumnNames="city_id"
+                constraintName="route_city_fk"
+                referencedTableName="cities"
+                referencedColumnNames="id" />
     </changeSet>
 
 

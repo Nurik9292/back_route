@@ -5,7 +5,7 @@ import com.takykulgam.ugur_v2.utils.ImageUtils;
 
 import java.util.Base64;
 
-public record Banner(String banner) {
+public record Banner(String banner) implements Domain {
 
     private static final int MAX_BANNER_SIZE_BYTES = 1024 * 1024;
 

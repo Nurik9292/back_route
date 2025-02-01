@@ -47,12 +47,7 @@ public class StopUpdateUseCase implements GenericUseCase<Mono<InputStopUpdate>, 
     }
 
     private Mono<OutputStop> updateStop(Stop stop) {
-        return stopRepository.update(
-                stop.getId(),
-                stop.getTitle(),
-                stop.getLocation().x(),
-                stop.getLocation().y(),
-                stop.getCityId());
+        return stopRepository.update(stop.getId(), stop);
     }
 
     public record Output(Mono<OutputStop> result) {}

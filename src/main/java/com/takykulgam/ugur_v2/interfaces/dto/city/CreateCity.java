@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.interfaces.dto.city;
 
-import com.takykulgam.ugur_v2.applications.boundaries.input.stop.InputCityCreate;
+import com.takykulgam.ugur_v2.applications.boundaries.input.city.InputCityCreate;
 import reactor.core.publisher.Mono;
 
 public record CreateCity(String name) {

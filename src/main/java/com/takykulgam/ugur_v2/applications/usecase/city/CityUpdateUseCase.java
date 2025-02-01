@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.applications.usecase.city;
 
-import com.takykulgam.ugur_v2.applications.boundaries.input.stop.InputCityUpdate;
+import com.takykulgam.ugur_v2.applications.boundaries.input.city.InputCityUpdate;
 import com.takykulgam.ugur_v2.applications.usecase.GenericUseCase;
 import com.takykulgam.ugur_v2.domain.entities.City;
 import com.takykulgam.ugur_v2.domain.exceptions.CoreException;

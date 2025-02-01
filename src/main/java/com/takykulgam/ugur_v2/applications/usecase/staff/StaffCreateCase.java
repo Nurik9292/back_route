@@ -36,7 +36,7 @@ public class StaffCreateCase implements GenericUseCase<Mono<InputStaffCreate>, S
     }
 
     private Mono<OutputStaff> saveStaff(Staff staff) {
-        return staffRepository.save(staff.getName(), staff.getPassword().value(), staff.isAdmin());
+        return staffRepository.save(staff);
     }
 
 

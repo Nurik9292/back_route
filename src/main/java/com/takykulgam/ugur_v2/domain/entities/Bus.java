@@ -1,6 +1,6 @@
 package com.takykulgam.ugur_v2.domain.entities;
 
-public class Bus {
+public class Bus implements Domain {
 
     private String carNumber;
     private String speed;

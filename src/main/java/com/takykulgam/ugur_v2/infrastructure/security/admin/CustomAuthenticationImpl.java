@@ -3,7 +3,7 @@ package com.takykulgam.ugur_v2.infrastructure.security.admin;
 import com.takykulgam.ugur_v2.applications.security.CustomAuthentication;
 import com.takykulgam.ugur_v2.applications.security.JwtTokenProvider;
 import com.takykulgam.ugur_v2.applications.security.SessionManager;
-import com.takykulgam.ugur_v2.infrastructure.persistnces.repositories.R2dbcStaffSessionRepository;
+import com.takykulgam.ugur_v2.infrastructure.database.persistnces.repositories.R2dbcStaffSessionRepository;
 import com.takykulgam.ugur_v2.infrastructure.security.sessions.SessionManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;

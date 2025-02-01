@@ -1,16 +1,15 @@
 package com.takykulgam.ugur_v2.interfaces.controllers.admin;
 
 import com.takykulgam.ugur_v2.applications.boundaries.input.InputPaginate;
-import com.takykulgam.ugur_v2.applications.usecase.stop.StopCreateUseCase;
-import com.takykulgam.ugur_v2.applications.usecase.stop.RetrieveAllStopCase;
-import com.takykulgam.ugur_v2.applications.usecase.stop.StopDeleteUseCase;
-import com.takykulgam.ugur_v2.applications.usecase.stop.StopUpdateUseCase;
 import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStop;
+import com.takykulgam.ugur_v2.applications.boundaries.output.OutputStopForRoute;
 import com.takykulgam.ugur_v2.applications.boundaries.output.UseCaseExecutor;
+import com.takykulgam.ugur_v2.applications.usecase.stop.*;
 import com.takykulgam.ugur_v2.interfaces.dto.PageResult;
 import com.takykulgam.ugur_v2.interfaces.dto.stop.StopCreate;
 import com.takykulgam.ugur_v2.interfaces.dto.stop.StopUpdate;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -22,17 +21,29 @@ public class StopController {
     private final StopUpdateUseCase updateStopUseCase;
     private final StopDeleteUseCase stopDeleteUseCase;
     private final UseCaseExecutor useCaseExecutor;
+    private final FetchAllStopUseCase fetchAllStopUseCase;
 
     public StopController(StopCreateUseCase createStopUseCase,
                           RetrieveAllStopCase retrieveAllStopCase,
                           StopUpdateUseCase updateStopUseCase,
                           StopDeleteUseCase stopDeleteUseCase,
-                          UseCaseExecutor useCaseExecutor) {
+                          UseCaseExecutor useCaseExecutor,
+                          FetchAllStopUseCase fetchAllStopUseCase) {
         this.createStopUseCase = createStopUseCase;
         this.retrieveAllStopCase = retrieveAllStopCase;
         this.updateStopUseCase = updateStopUseCase;
         this.stopDeleteUseCase = stopDeleteUseCase;
         this.useCaseExecutor = useCaseExecutor;
+        this.fetchAllStopUseCase = fetchAllStopUseCase;
+    }
+
+    @GetMapping("/all")
+    public Flux<OutputStopForRoute> getAllCity() {
+        return useCaseExecutor.execute(
+                fetchAllStopUseCase,
+                Mono.empty(),
+                FetchAllStopUseCase.Output::result
+        );
     }
 
     @GetMapping
