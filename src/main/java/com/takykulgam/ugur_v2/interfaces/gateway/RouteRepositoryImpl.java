@@ -31,7 +31,7 @@ public class RouteRepositoryImpl implements RouteRepository {
 
     @Override
     public Flux<OutputRoute> findAll() {
-        return null;
+        return repository.findAll().map(outputRouteMapper::toDto);
     }
 
     @Override
